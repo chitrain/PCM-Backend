@@ -6,7 +6,11 @@
 import Admin from '../models/admin'
 import { encrypt, validate } from '../utils/crypt'
 
-Admin.create('im_yujie@foxmail.com', 'Yujie', '123')
+(async function(){
+  await Admin.create('im_yujie@foxmail.com', 'Yujie', '123')
+  console.log('created admin!!!')
+})()
+
 
 /**
  * handler of login

@@ -6,7 +6,7 @@
 import Sequelize from 'sequelize'
 import { sequelize } from './sql'
 
-const Admin = Sequelize.define('admin', {
+const Admin = sequelize.define('admin', {
   email: {
     type: Sequelize.STRING
   },
@@ -19,6 +19,11 @@ const Admin = Sequelize.define('admin', {
 }, {
   freezeTableName: true
 })
+
+
+;(async function() {
+  Admin.sync({force: true})
+})()
 
 /**
  * wrapper of admin class
@@ -46,6 +51,6 @@ export default class {
     let query = {
       where: { email }
     }
-    return Admin.findAll(query)
+    return Admin.findOne(query)
   }
 }

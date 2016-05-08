@@ -4,6 +4,7 @@
  */
 
 import Record from '../models/record'
+import {extractStatus} from '../utils/basic'
 
 /**
  * handler of approve a record
@@ -12,7 +13,7 @@ import Record from '../models/record'
 export const approveHandler = async function(req, res) {
   let { recordID, status } = req.body
   
-  await record = Record.get(recordID)
+  let record = await Record.get(recordID)
   record.status = +status
   
   await record.save()

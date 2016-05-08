@@ -35,6 +35,6 @@ app.use((0, _cookieParser2.default)('**this is a cookie secret**'));
 // load router
 app.use('/', _router.router);
 
-app.listen(3000, function () {
+app.listen(3001, function () {
   console.log('server listening at port 3000...');
 });

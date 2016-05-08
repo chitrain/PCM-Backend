@@ -6,6 +6,7 @@
 import Sequelize from 'sequelize'
 import { sequelize } from './sql'
 
+
 const User = sequelize.define('user', {
   email: {
     type: Sequelize.STRING
@@ -19,6 +20,12 @@ const User = sequelize.define('user', {
 }, {
   freezeTableName: true
 })
+
+
+;(async function() {
+  User.sync({force: true})
+})()
+
 
 /**
  * wrapper of user class
@@ -43,7 +50,7 @@ export default class {
     
     // User.findAll actually return a Promise,
     // so we can use `await` syntax
-    return User.findAll(query)
+    return User.findOne(query)
   }
   
   /**
@@ -52,8 +59,7 @@ export default class {
    * @param email, name, password {String}
    * @return {Promise}
    */
-  static async create(email, name, password) {
-    await User.sync({force: true})
+  static create(email, name, password) {
     return User.create({ email, name, password })
   }
   

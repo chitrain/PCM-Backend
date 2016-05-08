@@ -48,13 +48,17 @@ const Record = sequelize.define('record', {
   }
 })
 
+;(async function() {
+  Record.sync({force: true})
+})()
+
 export default class {
   static model = Record
   
   constructor() {}
   
   static create(roomNo, applier, startTime, endTime, unit, scale, attachment) {
-    Record.create({ roomNo, applier, startTime, endTime, unit, scale, attachment, status: 0})
+    return Record.create({ roomNo, applier, startTime, endTime, unit, scale, attachment, status: 0})
   }
   
   static getByApplier(applier) {
@@ -102,6 +106,6 @@ export default class {
       where: {id: recordID}
     }
     
-    return Record.findAll(query)
+    return Record.findOne(query)
   }
 }

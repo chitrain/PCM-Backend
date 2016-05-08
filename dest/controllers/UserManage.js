@@ -49,7 +49,7 @@ var registerHandler = exports.registerHandler = function () {
           case 6:
             user = _context.sent;
 
-            if (!(user.length !== 0)) {
+            if (!user) {
               _context.next = 10;
               break;
             }
@@ -69,10 +69,10 @@ var registerHandler = exports.registerHandler = function () {
           case 15:
             newUser = _context.sent;
 
-            console.log(newUser);
+            // console.log(newUser)
             res.json({ error: 0, msg: '注册成功' });
 
-          case 18:
+          case 17:
           case 'end':
             return _context.stop();
         }
@@ -105,7 +105,7 @@ var loginHandler = exports.loginHandler = function () {
 
           case 5:
             user = _context2.sent;
-            userPwd = user[0].dataValues.password;
+            userPwd = user.password;
             _context2.next = 9;
             return (0, _crypt.validate)(password, userPwd);
 
@@ -117,13 +117,13 @@ var loginHandler = exports.loginHandler = function () {
               break;
             }
 
-            res.json({ error: 1, message: '密码错误' });
+            res.json({ error: 1, msg: '密码错误' });
             return _context2.abrupt('return');
 
           case 13:
 
             res.cookie('email', email, { signed: true });
-            res.json({ error: 0, message: '' });
+            res.json({ error: 0, msg: '登录成功' });
 
           case 15:
           case 'end':
@@ -142,9 +142,9 @@ var loginHandler = exports.loginHandler = function () {
  * method: GET
  */
 var logoutHandler = exports.logoutHandler = function logoutHandler(req, res) {
-  console.log(req.signedCookies.email);
+  // console.log(req.signedCookies.email)
   res.clearCookie('email');
-  res.json({ msg: 'success' });
+  res.json({ msg: '退出成功' });
 };
 
 /**
@@ -163,38 +163,46 @@ var changePasswordHandler = exports.changePasswordHandler = function () {
             oldPassword = _req$body3.oldPassword;
             newPassword = _req$body3.newPassword;
             email = req.signedCookies.email;
-            _context3.next = 6;
+
+            console.log('changed: ', email);
+
+            _context3.next = 7;
             return _user2.default.get(email);
 
-          case 6:
+          case 7:
             user = _context3.sent;
-            _context3.next = 9;
+
+            console.log('changed: ', user);
+            _context3.next = 11;
             return (0, _crypt.validate)(oldPassword, user.password);
 
-          case 9:
+          case 11:
             isRight = _context3.sent;
 
+            console.log('changed: ', isRight);
+
             if (isRight) {
-              _context3.next = 13;
+              _context3.next = 16;
               break;
             }
 
             res.json({ error: 1, msg: '密码错误' });
             return _context3.abrupt('return');
 
-          case 13:
-            _context3.next = 15;
+          case 16:
+            _context3.next = 18;
             return (0, _crypt.encrypt)(newPassword);
 
-          case 15:
+          case 18:
             user.password = _context3.sent;
-            _context3.next = 18;
+            _context3.next = 21;
             return user.save();
 
-          case 18:
+          case 21:
+            console.log('changed: ', 'finish');
             res.json({ error: 0, msg: '修改成功' });
 
-          case 19:
+          case 23:
           case 'end':
             return _context3.stop();
         }

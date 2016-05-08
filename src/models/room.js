@@ -14,8 +14,12 @@ const Room = sequelize.define('user', {
     type: Sequelize.INTEGER
   }
 }, {
-    freezeTableName: true
-  })
+  freezeTableName: true
+})
+
+;(async function() {
+  Room.sync({force: true})
+})()
 
 
 export default class {
@@ -26,16 +30,26 @@ export default class {
 
   }
 
+  /**
+   * get a room by roomNo
+   * @param roomNo {String}
+   * @return {Promise}
+   */ 
   static get(roomNo) {
     let query = {
       where: { roomNo }
     }
 
-    return Room.findAll(query)
+    return Room.findOne(query)
   }
 
-  static async create(roomNo, opacity) {
-    await Room.sync({ force: true })
+  /**
+   * get a room by roomNo
+   * @param roomNo {String}
+   * @param opacity {Number}
+   * @return {Promise}
+   */ 
+  static create(roomNo, opacity) {
     return Room.create({ roomNo, opacity })
   }
 }

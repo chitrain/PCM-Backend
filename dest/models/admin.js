@@ -33,12 +33,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @email im_yujie@foxmail.com
  */
 
-var Room = _sql.sequelize.define('user', {
-  roomNo: {
+var Admin = _sql.sequelize.define('admin', {
+  email: {
     type: _sequelize2.default.STRING
   },
-  opacity: {
-    type: _sequelize2.default.INTEGER
+  name: {
+    type: _sequelize2.default.STRING
+  },
+  password: {
+    type: _sequelize2.default.STRING
   }
 }, {
   freezeTableName: true
@@ -47,7 +50,7 @@ var Room = _sql.sequelize.define('user', {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          Room.sync({ force: true });
+          Admin.sync({ force: true });
 
         case 1:
         case 'end':
@@ -57,43 +60,45 @@ var Room = _sql.sequelize.define('user', {
   }, _callee, this);
 }))();
 
+/**
+ * wrapper of admin class
+ */
+
 var _class = function () {
   function _class() {
     (0, _classCallCheck3.default)(this, _class);
   }
 
   /**
-   * get a room by roomNo
-   * @param roomNo {String}
+   * create a new admin and insert into db
+   * @param email, name, password {String} 
    * @return {Promise}
    */
 
 
   (0, _createClass3.default)(_class, null, [{
-    key: 'get',
-    value: function get(roomNo) {
-      var query = {
-        where: { roomNo: roomNo }
-      };
-
-      return Room.findOne(query);
+    key: 'create',
+    value: function create(email, name, password) {
+      return Admin.create({ email: email, name: name, password: password });
     }
 
     /**
-     * get a room by roomNo
-     * @param roomNo {String}
-     * @param opacity {Number}
+     * get a admin from db
+     * @param email {String}
      * @return {Promise}
      */
 
   }, {
-    key: 'create',
-    value: function create(roomNo, opacity) {
-      return Room.create({ roomNo: roomNo, opacity: opacity });
+    key: 'get',
+    value: function get(email) {
+      var query = {
+        where: { email: email }
+      };
+      return Admin.findOne(query);
     }
   }]);
   return _class;
 }();
 
-_class.model = Room;
+_class.model = Admin;
 exports.default = _class;
