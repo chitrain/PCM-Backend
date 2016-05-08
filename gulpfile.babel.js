@@ -23,7 +23,7 @@ gulp.task('transform', () => {
 // })
 
 gulp.task('server', () => {
-  express.run(['dest/app.js'])
+  express.run(['dest/app.js'], {env: {NODE_ENV: 'development'}})
   // gulp.watch('[src/**/*.js]', ['transform', 'server'])
   
 })
