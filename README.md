@@ -1,42 +1,11 @@
 # Backend For PCM
 
-## API
+The project for course *System Design and Analyze*. This repo is source codes of the back end.
 
-path: `/register`
-method: POST
-query_string:
-```json
-{
-  email: "xxx",
-  name: "xxx",
-  password: "xxx"
-}
-```
-response:
-```json
-{
-  error: 1 | 0,
-  msg: "xxxx"
-}
-```
+Using Node.js Express framework to develop. In order to use features of ES2015/ES7, babel is used to compile the ES7 codes into ES5 version.
 
+Test-Driven Development by mocha and supertest.
 
-path: `/login`
-method: POST
-query_string:
-```json
-{
-  email: "xxx",
-  password: "xxx"
-}
-```
-response:
-```json
-{
-  error: 1 | 0,
-  msg: "xxxx"
-}
-```
+Database is driven by MySQL and orm by Sequelize.
 
-
-
+Use gulp to automaitcally build and run the project.

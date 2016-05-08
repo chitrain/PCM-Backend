@@ -4,7 +4,7 @@
  */
 
 import Record from '../models/record'
-import {extractStatus} from '../utils/basic'
+import { extractStatus } from '../utils/basic'
 
 /**
  * handler of approve a record

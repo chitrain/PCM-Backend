@@ -10,6 +10,9 @@ import Record from '../models/record'
 import Room from '../models/room'
 import CONFIG from '../config'
 
+/**
+ * method: POST
+ */
 export const applyHandler = async function(req, res) {
   let { startTime, endTime, roomNo, unit, scale } = req.body
   let applier = req.signedCookies.email
@@ -20,6 +23,9 @@ export const applyHandler = async function(req, res) {
   res.json({error: 0, msg: '申请成功'})
 }
 
+/**
+ * method: GET
+ */
 export const getRecordHandler = async function(req, res) {
   let { roomNo, startTime, endTime } = req.query
   let email = req.signedCookies.emal
