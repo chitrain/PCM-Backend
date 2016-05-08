@@ -34,7 +34,7 @@ export default class {
   /**
    * get a user from database
    * @param email {String}
-   * @returns {Promise}
+   * @return {Promise}
    */
   static get(email) {
     let query = {
@@ -50,7 +50,7 @@ export default class {
    * create a new user and
    * insert into db
    * @param email, name, password {String}
-   * @returns {Promise}
+   * @return {Promise}
    */
   static async create(email, name, password) {
     await User.sync({force: true})

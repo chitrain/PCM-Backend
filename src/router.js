@@ -7,6 +7,8 @@ import { Router } from 'express'
 import { registerHandler, loginHandler,
          logoutHandler, changePasswordHandler } from './controllers/UserManage'
 import { applyHandler, getRecordHandler } from './controllers/ApplyRoom'
+import { approveHandler } from './controllers/ApproveRecord'
+import { adminLoginHandler } from './controllers/AdminManage'
 
 export const router = Router()
 
@@ -26,3 +28,12 @@ router.post('/password', changePasswordHandler)
 router.post('/record', applyHandler)
 router.get('/record', getRecordHandler)
 
+/**
+ * route to approve
+ */
+router.post('/record/:recordID', approveHandler)
+
+/**
+ * route to admin
+ */
+router.post('/admin/login', adminLoginHandler)

@@ -32,14 +32,13 @@ export const registerHandler = async function(req, res) {
  * body: email=xxx&password=xxx
  */
 export const loginHandler = async function(req, res) {
-  let { email, password } = req.body;
+  let { email, password } = req.body
   
   let user = await User.get(email)
   let userPwd = user[0].dataValues.password
 
   
   let isRight = await validate(password, userPwd)
-   
   if (!isRight) {
     res.json({error: 1, message: '密码错误'})
     return

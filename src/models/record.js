@@ -96,4 +96,12 @@ export default class {
     
     return Record.findAll(query)
   }
+  
+  static get(recordID) {
+    let query = {
+      where: {id: recordID}
+    }
+    
+    return Record.findAll(query)
+  }
 }
