@@ -6,21 +6,24 @@
 import Sequelize from 'sequelize'
 import { sequelize } from './sql'
 
-const Room = sequelize.define('user', {
+const Room = sequelize.define('room', {
   roomNo: {
     type: Sequelize.STRING
   },
   opacity: {
     type: Sequelize.INTEGER
   }
-}, {
-  freezeTableName: true
 })
 
 ;(async function() {
-  Room.sync({force: true})
+  await Room.sync({force: true})
+  Room.create({roomNo: 'A101', opacity: 50})
+  Room.create({roomNo: 'A102', opacity: 60})
+  Room.create({roomNo: 'A103', opacity: 40})
+  Room.create({roomNo: 'A104', opacity: 50})
+  Room.create({roomNo: 'A105', opacity: 60})
+  Room.create({roomNo: 'A106', opacity: 90})
 })()
-
 
 export default class {
 
@@ -50,6 +53,10 @@ export default class {
    * @return {Promise}
    */ 
   static create(roomNo, opacity) {
+    console.log(roomNo, opacity)
     return Room.create({ roomNo, opacity })
+  }
+  static create(email, name, password) {
+    return Admin.create({ email, name, password })
   }
 }

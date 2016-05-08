@@ -43,36 +43,41 @@ var registerHandler = exports.registerHandler = function () {
             email = _req$body.email;
             name = _req$body.name;
             password = _req$body.password;
-            _context.next = 6;
+
+
+            console.log('email: ' + email + ' | name: ' + name + ' | password: ' + password);
+            _context.next = 7;
             return _user2.default.get(email);
 
-          case 6:
+          case 7:
             user = _context.sent;
 
+            console.log(user);
+
             if (!user) {
-              _context.next = 10;
+              _context.next = 12;
               break;
             }
 
             res.json({ error: 1, msg: '邮箱已被注册' });
             return _context.abrupt('return');
 
-          case 10:
-            _context.next = 12;
+          case 12:
+            _context.next = 14;
             return (0, _crypt.encrypt)(password);
 
-          case 12:
+          case 14:
             hashPwd = _context.sent;
-            _context.next = 15;
+            _context.next = 17;
             return _user2.default.create(email, name, hashPwd);
 
-          case 15:
+          case 17:
             newUser = _context.sent;
 
             // console.log(newUser)
             res.json({ error: 0, msg: '注册成功' });
 
-          case 17:
+          case 19:
           case 'end':
             return _context.stop();
         }
@@ -100,32 +105,35 @@ var loginHandler = exports.loginHandler = function () {
             _req$body2 = req.body;
             email = _req$body2.email;
             password = _req$body2.password;
-            _context2.next = 5;
+
+
+            console.log('email: ' + email + ' | password: ' + password);
+            _context2.next = 6;
             return _user2.default.get(email);
 
-          case 5:
+          case 6:
             user = _context2.sent;
             userPwd = user.password;
-            _context2.next = 9;
+            _context2.next = 10;
             return (0, _crypt.validate)(password, userPwd);
 
-          case 9:
+          case 10:
             isRight = _context2.sent;
 
             if (isRight) {
-              _context2.next = 13;
+              _context2.next = 14;
               break;
             }
 
             res.json({ error: 1, msg: '密码错误' });
             return _context2.abrupt('return');
 
-          case 13:
+          case 14:
 
             res.cookie('email', email, { signed: true });
             res.json({ error: 0, msg: '登录成功' });
 
-          case 15:
+          case 16:
           case 'end':
             return _context2.stop();
         }
@@ -164,15 +172,15 @@ var changePasswordHandler = exports.changePasswordHandler = function () {
             newPassword = _req$body3.newPassword;
             email = req.signedCookies.email;
 
+
+            console.log('oldPwd: ' + oldPassword + ' | newPwd: ' + newPassword);
             console.log('changed: ', email);
 
-            _context3.next = 7;
+            _context3.next = 8;
             return _user2.default.get(email);
 
-          case 7:
+          case 8:
             user = _context3.sent;
-
-            console.log('changed: ', user);
             _context3.next = 11;
             return (0, _crypt.validate)(oldPassword, user.password);
 

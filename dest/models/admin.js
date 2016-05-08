@@ -43,16 +43,18 @@ var Admin = _sql.sequelize.define('admin', {
   password: {
     type: _sequelize2.default.STRING
   }
-}, {
-  freezeTableName: true
 });(0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
   return _regenerator2.default.wrap(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          Admin.sync({ force: true });
+          _context.next = 2;
+          return Admin.sync({ force: true });
 
-        case 1:
+        case 2:
+          Admin.create({ email: 'im_yujie@foxmail.com', name: 'Yujie', password: '123' });
+
+        case 3:
         case 'end':
           return _context.stop();
       }

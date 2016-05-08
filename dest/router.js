@@ -26,7 +26,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @email im_yujie@foxmail.com
  */
 
-var upload = exports.upload = (0, _multer2.default)({ dest: '../tempStore' });
+var storage = _multer2.default.diskStorage({
+  destination: function destination(req, file, cb) {
+    return cb(null, './tempStore');
+  },
+  filename: function filename(req, file, cb) {
+    var ff = file.originalname.split('.');
+    var current = Date.now();
+    cb(null, file.fieldname + '-' + current + '.' + ff[ff.length - 1]);
+  }
+});
+
+var upload = exports.upload = (0, _multer2.default)({ storage: storage });
 var router = exports.router = (0, _express.Router)();
 
 router.get('/', function (req, res) {
@@ -44,8 +55,8 @@ router.post('/password', _UserManage.changePasswordHandler);
 /**
  * route to apply
  */
-router.post('/record', upload.single('temp?hero123'), function (req, res, next) {
-  next();
+router.post('/record', upload.single('file'), function (req, res, next) {
+  (0, _ApplyRoom.applyHandler)(req, res);
 });
 
 router.post('/record', _ApplyRoom.applyHandler);

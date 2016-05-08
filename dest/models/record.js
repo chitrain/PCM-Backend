@@ -44,20 +44,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * status: 0-pending | 1-passed | 2-rejected
  */
 var Record = _sql.sequelize.define('record', {
-  roomNo: {
-    type: _sequelize2.default.STRING,
-    references: {
-      model: _room2.default.model,
-      key: 'roomNo'
-    }
-  },
-  applier: {
-    type: _sequelize2.default.STRING,
-    references: {
-      model: _user2.default.model,
-      key: 'email'
-    }
-  },
   startTime: {
     type: _sequelize2.default.DATE
   },
@@ -75,6 +61,20 @@ var Record = _sql.sequelize.define('record', {
   },
   status: {
     type: _sequelize2.default.INTEGER
+  },
+  applierId: {
+    type: _sequelize2.default.INTEGER,
+    references: {
+      model: _user2.default.model,
+      key: 'id'
+    }
+  },
+  roomId: {
+    type: _sequelize2.default.INTEGER,
+    references: {
+      model: _room2.default.model,
+      key: 'id'
+    }
   }
 }); /**
      * @author Yujie Li
@@ -86,9 +86,11 @@ var Record = _sql.sequelize.define('record', {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
+          Record.belongsTo(_user2.default.model, { foreignKey: 'applierId' });
+          Record.belongsTo(_room2.default.model, { foreignKey: 'roomId' });
           Record.sync({ force: true });
 
-        case 1:
+        case 3:
         case 'end':
           return _context.stop();
       }
@@ -103,9 +105,79 @@ var _class = function () {
 
   (0, _createClass3.default)(_class, null, [{
     key: 'create',
-    value: function create(roomNo, applier, startTime, endTime, unit, scale, attachment) {
-      return Record.create({ roomNo: roomNo, applier: applier, startTime: startTime, endTime: endTime, unit: unit, scale: scale, attachment: attachment, status: 0 });
-    }
+    value: function () {
+      var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(roomNo, applier, startTime, endTime, unit, scale, attachment) {
+        var user, room, record;
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _user2.default.get(applier);
+
+              case 2:
+                user = _context2.sent;
+                _context2.next = 5;
+                return _room2.default.get(roomNo);
+
+              case 5:
+                room = _context2.sent;
+                _context2.next = 8;
+                return Record.create({
+                  startTime: startTime,
+                  endTime: endTime,
+                  unit: unit,
+                  scale: scale,
+                  attachment: attachment,
+                  status: 0
+                });
+
+              case 8:
+                record = _context2.sent;
+                _context2.prev = 9;
+                _context2.next = 12;
+                return record.setUser(user);
+
+              case 12:
+                _context2.next = 17;
+                break;
+
+              case 14:
+                _context2.prev = 14;
+                _context2.t0 = _context2['catch'](9);
+
+                console.error(_context2.t0);
+
+              case 17:
+                _context2.next = 19;
+                return record.save();
+
+              case 19:
+                _context2.next = 21;
+                return record.setRoom(room);
+
+              case 21:
+                _context2.next = 23;
+                return record.save();
+
+              case 23:
+                console.log('set finish..........');
+                return _context2.abrupt('return', record.save());
+
+              case 25:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[9, 14]]);
+      }));
+
+      function create(_x, _x2, _x3, _x4, _x5, _x6, _x7) {
+        return ref.apply(this, arguments);
+      }
+
+      return create;
+    }()
   }, {
     key: 'getByApplier',
     value: function getByApplier(applier) {
@@ -141,15 +213,39 @@ var _class = function () {
     }
   }, {
     key: 'getByRoomNo',
-    value: function getByRoomNo(roomNo) {
-      var query = {
-        where: {
-          roomNo: roomNo
-        }
-      };
+    value: function () {
+      var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(roomNo) {
+        var room, query;
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return _room2.default.get(roomNo);
 
-      return Record.findAll(query);
-    }
+              case 2:
+                room = _context3.sent;
+                query = {
+                  where: {
+                    roomId: room.id
+                  }
+                };
+                return _context3.abrupt('return', Record.findAll(query));
+
+              case 5:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function getByRoomNo(_x8) {
+        return ref.apply(this, arguments);
+      }
+
+      return getByRoomNo;
+    }()
   }, {
     key: 'get',
     value: function get(recordID) {

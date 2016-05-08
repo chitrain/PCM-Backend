@@ -43,8 +43,6 @@ var User = _sql.sequelize.define('user', {
   password: {
     type: _sequelize2.default.STRING
   }
-}, {
-  freezeTableName: true
 });(0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
   return _regenerator2.default.wrap(function _callee$(_context) {
     while (1) {
@@ -82,7 +80,6 @@ var _class = function () {
       var query = {
         where: { email: email }
       };
-
       // User.findAll actually return a Promise,
       // so we can use `await` syntax
       return User.findOne(query);

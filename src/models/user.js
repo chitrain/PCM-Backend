@@ -17,8 +17,6 @@ const User = sequelize.define('user', {
   password: {
     type: Sequelize.STRING
   }
-}, {
-  freezeTableName: true
 })
 
 
@@ -47,7 +45,6 @@ export default class {
     let query = {
       where: { email }
     }
-    
     // User.findAll actually return a Promise,
     // so we can use `await` syntax
     return User.findOne(query)

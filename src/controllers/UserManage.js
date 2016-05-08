@@ -13,8 +13,10 @@ import { encrypt, validate } from '../utils/crypt'
  */
 export const registerHandler = async function(req, res) {
   let { email, name, password } = req.body
-
-  let user = await User.get(email)   
+  
+  console.log(`email: ${email} | name: ${name} | password: ${password}`)
+  let user = await User.get(email)
+  console.log(user)
   if (user) {
     res.json({error: 1, msg: '邮箱已被注册'})
     return
@@ -34,6 +36,7 @@ export const registerHandler = async function(req, res) {
 export const loginHandler = async function(req, res) {
   let { email, password } = req.body
   
+  console.log(`email: ${email} | password: ${password}`)
   let user = await User.get(email)
   let userPwd = user.password
   
@@ -64,10 +67,12 @@ export const logoutHandler = (req, res) => {
 export const changePasswordHandler = async function(req, res) {
   let { oldPassword, newPassword } = req.body
   let email = req.signedCookies.email
+  
+  console.log(`oldPwd: ${oldPassword} | newPwd: ${newPassword}`) 
   console.log('changed: ', email)
   
   let user = await User.get(email)
-  console.log('changed: ', user)
+  // console.log('changed: ', user)
   let isRight = await validate(oldPassword, user.password)
   console.log('changed: ', isRight)
   if (!isRight) {

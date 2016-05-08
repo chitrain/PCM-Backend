@@ -14,20 +14,6 @@ import { sequelize } from './sql'
  * status: 0-pending | 1-passed | 2-rejected
  */
 const Record = sequelize.define('record', {
-  roomNo: {
-    type: Sequelize.STRING,
-    references: {
-      model: Room.model,
-      key: 'roomNo'
-    }
-  },
-  applier: {
-    type: Sequelize.STRING,
-    references: {
-      model: User.model,
-      key: 'email'
-    }
-  },
   startTime: {
     type: Sequelize.DATE
   },
@@ -45,10 +31,26 @@ const Record = sequelize.define('record', {
   },
   status: {
     type: Sequelize.INTEGER
+  },
+  applierId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: User.model,
+      key: 'id'
+    }
+  },
+  roomId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Room.model,
+      key: 'id'
+    }
   }
 })
 
 ;(async function() {
+  Record.belongsTo(User.model, {foreignKey: 'applierId'})
+  Record.belongsTo(Room.model, {foreignKey: 'roomId'})
   Record.sync({force: true})
 })()
 
@@ -57,8 +59,27 @@ export default class {
   
   constructor() {}
   
-  static create(roomNo, applier, startTime, endTime, unit, scale, attachment) {
-    return Record.create({ roomNo, applier, startTime, endTime, unit, scale, attachment, status: 0})
+  static async create(roomNo, applier, startTime, endTime, unit, scale, attachment) {
+    let user = await User.get(applier)
+    let room = await Room.get(roomNo)
+    let record = await Record.create({
+      startTime,
+      endTime,
+      unit,
+      scale,
+      attachment,
+      status: 0
+    })
+    try {
+      await record.setUser(user)
+    } catch (err) {
+      console.error(err)
+    }
+    await record.save()
+    await record.setRoom(room)
+    await record.save()
+    console.log('set finish..........')
+    return record.save()
   }
   
   static getByApplier(applier) {
@@ -91,10 +112,11 @@ export default class {
     return Record.findAll(query)
   }
   
-  static getByRoomNo(roomNo) {
+  static async getByRoomNo(roomNo) {
+    let room = await Room.get(roomNo)
     let query = {
       where: {
-        roomNo
+        roomId: room.id
       }
     }
     

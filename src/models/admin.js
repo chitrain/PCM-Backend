@@ -16,13 +16,12 @@ const Admin = sequelize.define('admin', {
   password: {
     type: Sequelize.STRING
   }
-}, {
-  freezeTableName: true
 })
 
 
 ;(async function() {
-  Admin.sync({force: true})
+  await Admin.sync({force: true})
+  Admin.create({email: 'im_yujie@foxmail.com', name: 'Yujie', password: '123'})
 })()
 
 /**

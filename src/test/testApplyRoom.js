@@ -33,7 +33,7 @@ export const ApplyRoomTest = () => {
       .field('roomNo', 'A101')
       .field('unit', '呵呵哒')
       .field('scale', '40')
-      .attach('../../testData/neipei.docx')
+      .attach('file', '../testData/neipei.docx')
       .expect(200, {
         error: 0,
         msg: '申请成功'

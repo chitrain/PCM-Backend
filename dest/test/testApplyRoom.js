@@ -34,7 +34,7 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
   });
 
   it('apply room should success', function (done) {
-    server.post('/record').field('startTime', '2016-05-08 12:00').field('endTime', '2016-05-08 15:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('../../testData/neipei.docx').expect(200, {
+    server.post('/record').field('startTime', '2016-05-08 12:00').field('endTime', '2016-05-08 15:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
       error: 0,
       msg: '申请成功'
     }, done);
