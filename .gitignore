@@ -2,3 +2,4 @@ node_modules
 gitconfig
 tempStore
 testData
+npm-debug.log
