@@ -25,6 +25,7 @@ export const registerHandler = async function(req, res) {
   let hashPwd = await encrypt(password)
   let newUser = await User.create(email, name, hashPwd)
   // console.log(newUser)
+  req.session.user = {email, name}
   res.json({error: 0, msg: '注册成功'})
 }
 
@@ -46,7 +47,8 @@ export const loginHandler = async function(req, res) {
     return
   }
   
-  res.cookie('email', email, {signed: true})
+  req.session.user = {email, name: user.name}
+  // res.cookie('email', email, {signed: true})
   res.json({error: 0, msg: '登录成功'})
 }
 
@@ -55,8 +57,7 @@ export const loginHandler = async function(req, res) {
  * method: GET
  */
 export const logoutHandler = (req, res) => {
-  // console.log(req.signedCookies.email)
-  res.clearCookie('email')
+  req.session.user = null
   res.json({msg: '退出成功'})
 }
 
@@ -66,7 +67,7 @@ export const logoutHandler = (req, res) => {
  */
 export const changePasswordHandler = async function(req, res) {
   let { oldPassword, newPassword } = req.body
-  let email = req.signedCookies.email
+  let email = req.session.user.email
   
   console.log(`oldPwd: ${oldPassword} | newPwd: ${newPassword}`) 
   console.log('changed: ', email)
@@ -83,5 +84,7 @@ export const changePasswordHandler = async function(req, res) {
   user.password = await encrypt(newPassword)
   await user.save()
   console.log('changed: ', 'finish')
+  
+  req.session.user = null
   res.json({error: 0, msg: '修改成功'})
 }

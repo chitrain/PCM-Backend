@@ -24,6 +24,21 @@ const storage = multer.diskStorage({
 export const upload = multer({storage})
 export const router = Router()
 
+router.use((req, res, next) => {
+  let url = req.originalUrl
+  
+  if (req.session.user) {
+    next()
+  } else {
+    if (url.indexOf('login') > -1 || url.indexOf('register') > -1) {
+      next()
+    } else {
+      res.json({error: 1, msg: '尚未登录'})
+    }
+  }
+})
+
+
 router.get('/', (req, res) => res.json({msg: 'index'}))
 
 /**

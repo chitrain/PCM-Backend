@@ -18,12 +18,6 @@ const Admin = sequelize.define('admin', {
   }
 })
 
-
-;(async function() {
-  await Admin.sync({force: true})
-  Admin.create({email: 'im_yujie@foxmail.com', name: 'Yujie', password: '123'})
-})()
-
 /**
  * wrapper of admin class
  */

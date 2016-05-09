@@ -34,6 +34,20 @@ var UserManageTest = exports.UserManageTest = function UserManageTest() {
     }, done);
   });
 
+  it('logout should success', function (done) {
+    server.get('/logout').expect(200, { msg: '退出成功' }, done);
+  });
+
+  it('change passoword should fail', function (done) {
+    server.post('/password').type('form').send({
+      oldPassword: '123476', // wrong
+      newPassword: '654321'
+    }).expect(200, {
+      error: 1,
+      msg: '尚未登录'
+    }, done);
+  });
+
   it('login should fail', function (done) {
     server.post('/login').type('form').send({
       email: 'im_yujie@foxmail.com',
@@ -48,7 +62,7 @@ var UserManageTest = exports.UserManageTest = function UserManageTest() {
     server.post('/login').type('form').send({
       email: 'im_yujie@foxmail.com',
       password: '123456'
-    }).expect('set-cookie', /im_yujie/g).expect(200, {
+    }).expect(200, {
       error: 0,
       msg: '登录成功'
     }, done);
@@ -72,9 +86,5 @@ var UserManageTest = exports.UserManageTest = function UserManageTest() {
       error: 0,
       msg: '修改成功'
     }, done);
-  });
-
-  it('logout should success', function (done) {
-    server.get('/logout').expect('set-cookie', /email=;/g).expect(200, { msg: '退出成功' }, done);
   });
 };

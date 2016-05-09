@@ -19,12 +19,6 @@ const User = sequelize.define('user', {
   }
 })
 
-
-;(async function() {
-  User.sync({force: true})
-})()
-
-
 /**
  * wrapper of user class
  */

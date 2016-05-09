@@ -18,7 +18,7 @@ export const ApplyRoomTest = () => {
         email: 'im_yujie@foxmail.com',
         password: '654321'
       })
-      .expect('set-cookie', /im_yujie/g)
+      .expect('set-cookie', /connect\.sid/g)
       .expect(200, {
         error: 0,
         msg: '登录成功'

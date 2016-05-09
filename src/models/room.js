@@ -15,16 +15,6 @@ const Room = sequelize.define('room', {
   }
 })
 
-;(async function() {
-  await Room.sync({force: true})
-  Room.create({roomNo: 'A101', opacity: 50})
-  Room.create({roomNo: 'A102', opacity: 60})
-  Room.create({roomNo: 'A103', opacity: 40})
-  Room.create({roomNo: 'A104', opacity: 50})
-  Room.create({roomNo: 'A105', opacity: 60})
-  Room.create({roomNo: 'A106', opacity: 90})
-})()
-
 export default class {
 
   static model = Room
@@ -55,8 +45,5 @@ export default class {
   static create(roomNo, opacity) {
     console.log(roomNo, opacity)
     return Room.create({ roomNo, opacity })
-  }
-  static create(email, name, password) {
-    return Admin.create({ email, name, password })
   }
 }

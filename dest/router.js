@@ -40,6 +40,20 @@ var storage = _multer2.default.diskStorage({
 var upload = exports.upload = (0, _multer2.default)({ storage: storage });
 var router = exports.router = (0, _express.Router)();
 
+router.use(function (req, res, next) {
+  var url = req.originalUrl;
+
+  if (req.session.user) {
+    next();
+  } else {
+    if (url.indexOf('login') > -1 || url.indexOf('register') > -1) {
+      next();
+    } else {
+      res.json({ error: 1, msg: '尚未登录' });
+    }
+  }
+});
+
 router.get('/', function (req, res) {
   return res.json({ msg: 'index' });
 });

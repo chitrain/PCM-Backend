@@ -75,9 +75,10 @@ var registerHandler = exports.registerHandler = function () {
             newUser = _context.sent;
 
             // console.log(newUser)
+            req.session.user = { email: email, name: name };
             res.json({ error: 0, msg: '注册成功' });
 
-          case 19:
+          case 20:
           case 'end':
             return _context.stop();
         }
@@ -130,7 +131,8 @@ var loginHandler = exports.loginHandler = function () {
 
           case 14:
 
-            res.cookie('email', email, { signed: true });
+            req.session.user = { email: email, name: user.name };
+            // res.cookie('email', email, {signed: true})
             res.json({ error: 0, msg: '登录成功' });
 
           case 16:
@@ -150,8 +152,7 @@ var loginHandler = exports.loginHandler = function () {
  * method: GET
  */
 var logoutHandler = exports.logoutHandler = function logoutHandler(req, res) {
-  // console.log(req.signedCookies.email)
-  res.clearCookie('email');
+  req.session.user = null;
   res.json({ msg: '退出成功' });
 };
 
@@ -170,7 +171,7 @@ var changePasswordHandler = exports.changePasswordHandler = function () {
             _req$body3 = req.body;
             oldPassword = _req$body3.oldPassword;
             newPassword = _req$body3.newPassword;
-            email = req.signedCookies.email;
+            email = req.session.user.email;
 
 
             console.log('oldPwd: ' + oldPassword + ' | newPwd: ' + newPassword);
@@ -208,9 +209,11 @@ var changePasswordHandler = exports.changePasswordHandler = function () {
 
           case 21:
             console.log('changed: ', 'finish');
+
+            req.session.user = null;
             res.json({ error: 0, msg: '修改成功' });
 
-          case 23:
+          case 24:
           case 'end':
             return _context3.stop();
         }

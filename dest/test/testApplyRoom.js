@@ -27,7 +27,7 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
     server.post('/login').type('form').send({
       email: 'im_yujie@foxmail.com',
       password: '654321'
-    }).expect('set-cookie', /im_yujie/g).expect(200, {
+    }).expect('set-cookie', /connect\.sid/g).expect(200, {
       error: 0,
       msg: '登录成功'
     }, done);

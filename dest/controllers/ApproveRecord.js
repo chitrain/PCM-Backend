@@ -41,23 +41,31 @@ var approveHandler = exports.approveHandler = function () {
             _req$body = req.body;
             recordID = _req$body.recordID;
             status = _req$body.status;
-            _context.next = 5;
+
+
+            status = +status;
+
+            if (status !== 0 && status !== 1 && status !== 2) {
+              res.json({ error: 1, msg: '参数错误' });
+            }
+
+            _context.next = 7;
             return _record2.default.get(recordID);
 
-          case 5:
+          case 7:
             record = _context.sent;
 
-            record.status = +status;
+            record.status = status;
 
-            _context.next = 9;
+            _context.next = 11;
             return record.save();
 
-          case 9:
+          case 11:
             console.log('审批' + (0, _basic.extractStatus)(status));
             // notify users
             res.json({ error: 0, msg: '审批完成' });
 
-          case 11:
+          case 13:
           case 'end':
             return _context.stop();
         }

@@ -48,12 +48,6 @@ const Record = sequelize.define('record', {
   }
 })
 
-;(async function() {
-  Record.belongsTo(User.model, {foreignKey: 'applierId'})
-  Record.belongsTo(Room.model, {foreignKey: 'roomId'})
-  Record.sync({force: true})
-})()
-
 export default class {
   static model = Record
   
