@@ -39,6 +39,11 @@ export const loginHandler = async function(req, res) {
   
   console.log(`email: ${email} | password: ${password}`)
   let user = await User.get(email)
+  if (!user) {
+    res.json({error: 1, msg: '用户不存在'})
+    return
+  }
+  
   let userPwd = user.password
   
   let isRight = await validate(password, userPwd)

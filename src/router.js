@@ -10,7 +10,7 @@ import { registerHandler, loginHandler,
          logoutHandler, changePasswordHandler } from './controllers/UserManage'
 import { applyHandler, getRecordHandler } from './controllers/ApplyRoom'
 import { approveHandler } from './controllers/ApproveRecord'
-import { adminLoginHandler } from './controllers/AdminManage'
+import { adminLoginHandler, adminLogoutHandler } from './controllers/AdminManage'
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, './tempStore'),
@@ -27,6 +27,20 @@ export const router = Router()
 router.use((req, res, next) => {
   let url = req.originalUrl
   
+  // admin
+  if (url.indexOf('admin') > -1) {
+    if (url.indexOf('login') > -1) {
+      next()
+      return
+    }
+    if (req.session.admin) {
+      next()
+      return
+    }
+    res.json({error: 1, msg: '没有权限'})
+  }
+  
+  // user
   if (req.session.user) {
     next()
   } else {
@@ -63,9 +77,10 @@ router.get('/record', getRecordHandler)
 /**
  * route to approve
  */
-router.post('/record/:recordID', approveHandler)
+router.post('/admin/record/:recordID', approveHandler)
 
 /**
  * route to admin
  */
 router.post('/admin/login', adminLoginHandler)
+router.post('/admin/logout', adminLogoutHandler)

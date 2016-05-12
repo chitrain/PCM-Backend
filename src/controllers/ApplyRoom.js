@@ -28,8 +28,8 @@ export const applyHandler = async function(req, res) {
     return
   }
   
-  // check room opacity is enough
-  if (room.opacity < (+scale)) {
+  // check room capacity is enough
+  if (room.capacity < (+scale)) {
     res.json({error: 1, msg: '课室容量不足'})
     return
   }

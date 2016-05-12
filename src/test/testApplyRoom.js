@@ -28,8 +28,8 @@ export const ApplyRoomTest = () => {
   it('apply room should success', (done) => {
     server
       .post('/record')
-      .field('startTime', '2016-05-08 12:00')
-      .field('endTime', '2016-05-08 15:00')
+      .field('startTime', '2016-05-08 12:00 GMT+0800')
+      .field('endTime', '2016-05-08 15:00 GMT+0800')
       .field('roomNo', 'A101')
       .field('unit', '呵呵哒')
       .field('scale', '40')

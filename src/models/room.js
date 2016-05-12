@@ -10,7 +10,7 @@ const Room = sequelize.define('room', {
   roomNo: {
     type: Sequelize.STRING
   },
-  opacity: {
+  capacity: {
     type: Sequelize.INTEGER
   }
 })
@@ -39,11 +39,11 @@ export default class {
   /**
    * get a room by roomNo
    * @param roomNo {String}
-   * @param opacity {Number}
+   * @param capacity {Number}
    * @return {Promise}
    */ 
-  static create(roomNo, opacity) {
-    console.log(roomNo, opacity)
-    return Room.create({ roomNo, opacity })
+  static create(roomNo, capacity) {
+    console.log(roomNo, capacity)
+    return Room.create({ roomNo, capacity })
   }
 }
