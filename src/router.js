@@ -9,11 +9,12 @@ import multer from 'multer'
 import { registerHandler, loginHandler,
          logoutHandler, changePasswordHandler } from './controllers/UserManage'
 import { applyHandler, getRecordHandler } from './controllers/ApplyRoom'
-import { approveHandler } from './controllers/ApproveRecord'
+import { approveHandler, downloadHandler } from './controllers/ApproveRecord'
 import { adminLoginHandler, adminLogoutHandler } from './controllers/AdminManage'
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, './tempStore'),
+  
   filename: (req, file, cb) => {
     let ff = file.originalname.split('.')
     let current = Date.now()
@@ -29,15 +30,12 @@ router.use((req, res, next) => {
   
   // admin
   if (url.indexOf('admin') > -1) {
-    if (url.indexOf('login') > -1) {
-      next()
-      return
-    }
-    if (req.session.admin) {
+    if (url.indexOf('login') > -1 || req.session.admin) {
       next()
       return
     }
     res.json({error: 1, msg: '没有权限'})
+    return
   }
   
   // user
@@ -51,7 +49,6 @@ router.use((req, res, next) => {
     }
   }
 })
-
 
 router.get('/', (req, res) => res.json({msg: 'index'}))
 
@@ -83,4 +80,7 @@ router.post('/admin/record/:recordID', approveHandler)
  * route to admin
  */
 router.post('/admin/login', adminLoginHandler)
-router.post('/admin/logout', adminLogoutHandler)
+router.get('/admin/logout', adminLogoutHandler)
+
+router.get('/admin/download', downloadHandler)
+

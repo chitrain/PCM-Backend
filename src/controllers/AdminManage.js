@@ -37,6 +37,12 @@ export const adminLoginHandler = async function (req, res) {
  * method: GET
  */
 export const adminLogoutHandler = (req, res) => {
-  req.session.admin = null
-  res.json({error: 0, msg: '退出成功'})
+  try {
+    console.log('## LOG ##', 'GET /admin/logout')
+    req.session.admin = null
+    res.json({error: 0, msg: '退出成功'})
+  } catch(e) {
+    res.json({error: 1, msg: '意外错误'})
+  }
+  
 }

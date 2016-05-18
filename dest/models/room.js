@@ -29,7 +29,7 @@ var Room = _sql.sequelize.define('room', {
   roomNo: {
     type: _sequelize2.default.STRING
   },
-  opacity: {
+  capacity: {
     type: _sequelize2.default.INTEGER
   }
 });
@@ -59,15 +59,15 @@ var _class = function () {
     /**
      * get a room by roomNo
      * @param roomNo {String}
-     * @param opacity {Number}
+     * @param capacity {Number}
      * @return {Promise}
      */
 
   }, {
     key: 'create',
-    value: function create(roomNo, opacity) {
-      console.log(roomNo, opacity);
-      return Room.create({ roomNo: roomNo, opacity: opacity });
+    value: function create(roomNo, capacity) {
+      console.log(roomNo, capacity);
+      return Room.create({ roomNo: roomNo, capacity: capacity });
     }
   }]);
   return _class;

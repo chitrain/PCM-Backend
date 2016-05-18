@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.adminLoginHandler = undefined;
+exports.adminLogoutHandler = exports.adminLoginHandler = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -47,27 +47,37 @@ var adminLoginHandler = exports.adminLoginHandler = function () {
 
           case 5:
             admin = _context.sent;
-            userPwd = user[0].dateValues.password;
-            _context.next = 9;
-            return (0, _crypt.validate)(password, userPwd);
 
-          case 9:
-            isRight = _context.sent;
-
-            if (isRight) {
-              _context.next = 13;
+            if (admin) {
+              _context.next = 9;
               break;
             }
 
-            res.json({ error: 1, message: '密码错误' });
+            res.json({ error: 1, msg: '用户不存在' });
             return _context.abrupt('return');
 
-          case 13:
+          case 9:
+            userPwd = admin.password;
+            _context.next = 12;
+            return (0, _crypt.validate)(password, userPwd);
 
-            res.cookie('email', email, { signed: true });
-            res.json({ error: 0, message: '' });
+          case 12:
+            isRight = _context.sent;
 
-          case 15:
+            if (isRight) {
+              _context.next = 16;
+              break;
+            }
+
+            res.json({ error: 1, msg: '密码错误' });
+            return _context.abrupt('return');
+
+          case 16:
+
+            req.session.admin = { email: email, name: admin.name };
+            res.json({ error: 0, msg: '登录成功' });
+
+          case 18:
           case 'end':
             return _context.stop();
         }
@@ -78,3 +88,17 @@ var adminLoginHandler = exports.adminLoginHandler = function () {
     return ref.apply(this, arguments);
   };
 }();
+
+/**
+ * handler of logout
+ * method: GET
+ */
+var adminLogoutHandler = exports.adminLogoutHandler = function adminLogoutHandler(req, res) {
+  try {
+    console.log('## LOG ##', 'GET /admin/logout');
+    req.session.admin = null;
+    res.json({ error: 0, msg: '退出成功' });
+  } catch (e) {
+    res.json({ error: 1, msg: '意外错误' });
+  }
+};

@@ -114,28 +114,38 @@ var loginHandler = exports.loginHandler = function () {
 
           case 6:
             user = _context2.sent;
-            userPwd = user.password;
-            _context2.next = 10;
-            return (0, _crypt.validate)(password, userPwd);
+
+            if (user) {
+              _context2.next = 10;
+              break;
+            }
+
+            res.json({ error: 1, msg: '用户不存在' });
+            return _context2.abrupt('return');
 
           case 10:
+            userPwd = user.password;
+            _context2.next = 13;
+            return (0, _crypt.validate)(password, userPwd);
+
+          case 13:
             isRight = _context2.sent;
 
             if (isRight) {
-              _context2.next = 14;
+              _context2.next = 17;
               break;
             }
 
             res.json({ error: 1, msg: '密码错误' });
             return _context2.abrupt('return');
 
-          case 14:
+          case 17:
 
             req.session.user = { email: email, name: user.name };
             // res.cookie('email', email, {signed: true})
             res.json({ error: 0, msg: '登录成功' });
 
-          case 16:
+          case 19:
           case 'end':
             return _context2.stop();
         }

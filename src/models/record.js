@@ -72,7 +72,6 @@ export default class {
     await record.save()
     await record.setRoom(room)
     await record.save()
-    console.log('set finish..........')
     return record.save()
   }
   
@@ -123,5 +122,9 @@ export default class {
     }
     
     return Record.findOne(query)
+  }
+  
+  static async getAllRecords() {
+    return Record.findAll()
   }
 }

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.approveHandler = undefined;
+exports.downloadHandler = exports.approveHandler = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -45,27 +45,32 @@ var approveHandler = exports.approveHandler = function () {
 
             status = +status;
 
-            if (status !== 0 && status !== 1 && status !== 2) {
-              res.json({ error: 1, msg: '参数错误' });
+            if (!(status !== 0 && status !== 1 && status !== 2)) {
+              _context.next = 7;
+              break;
             }
 
-            _context.next = 7;
-            return _record2.default.get(recordID);
+            res.json({ error: 1, msg: '参数错误' });
+            return _context.abrupt('return');
 
           case 7:
+            _context.next = 9;
+            return _record2.default.get(recordID);
+
+          case 9:
             record = _context.sent;
 
             record.status = status;
 
-            _context.next = 11;
+            _context.next = 13;
             return record.save();
 
-          case 11:
+          case 13:
             console.log('审批' + (0, _basic.extractStatus)(status));
             // notify users
             res.json({ error: 0, msg: '审批完成' });
 
-          case 13:
+          case 15:
           case 'end':
             return _context.stop();
         }
@@ -76,3 +81,19 @@ var approveHandler = exports.approveHandler = function () {
     return ref.apply(this, arguments);
   };
 }();
+
+/**
+ * handler of download attachment
+ * method: GET
+ */
+var downloadHandler = exports.downloadHandler = function downloadHandler(req, res) {
+  var path = req.query.path;
+
+  res.download(path, 'application.pdf', function (err) {
+    if (err) {
+      console.log(err);
+      res.json({ error: 1, msg: '意外错误' });
+    }
+    console.log('##LOG##: Finish download');
+  });
+};

@@ -5,4 +5,6 @@
 
 import Sequelize from 'sequelize'
 
-export const sequelize = new Sequelize('pcm', 'root', 'mysqlpwd')
+export const sequelize = new Sequelize('pcm', 'root', 'mysqlpwd', {
+  timezone: '+08:00'
+})

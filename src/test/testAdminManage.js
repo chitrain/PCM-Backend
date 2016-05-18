@@ -15,8 +15,11 @@ export const AdminManageTest = () => {
   it('admin login should fail', (done) => {
     server
       .post('/admin/login')
-      .field('email', 'im@foxmail.com')
-      .field('paddword', '123456')
+      .type('form')
+      .send({
+        email: 'im@foxmail.com',
+        password: '123456'
+      })
       .expect(200, {
         error: 1,
         msg: '用户不存在'
@@ -27,11 +30,24 @@ export const AdminManageTest = () => {
   it('admin login should fail', (done) => {
     server
       .post('/admin/login')
-      .field('email', 'im_yujie@foxmail.com')
-      .field('paddword', '12345')
+      .type('form')
+      .send({
+        email: 'im_yujie@foxmail.com',
+        password: '12345'
+      })
       .expect(200, {
         error: 1,
         msg: '密码错误'
+      }, done)
+  })
+  
+  // wrong - not permitted
+  it('admin logout should fail', (done) => {
+    server
+      .get('/admin/logout')
+      .expect(200, {
+        error: 1,
+        msg: '没有权限'
       }, done)
   })
   
@@ -39,8 +55,11 @@ export const AdminManageTest = () => {
   it('admin login should success', (done) => {
     server
       .post('/admin/login')
-      .field('email', 'im_yujie@foxmail.com')
-      .field('password', '123456')
+      .type('form')
+      .send({
+        email: 'im_yujie@foxmail.com',
+        password: '123456'
+      })
       .expect(200, {
         error: 0,
         msg: '登录成功'
@@ -54,6 +73,6 @@ export const AdminManageTest = () => {
       .expect(200, {
         error: 0,
         msg: '退出成功'
-      })
+      }, done)
   })
 }

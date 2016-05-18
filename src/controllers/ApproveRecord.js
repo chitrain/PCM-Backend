@@ -17,6 +17,7 @@ export const approveHandler = async function(req, res) {
   
   if (status !== 0 && status !== 1 && status !== 2) {
     res.json({error: 1, msg: '参数错误'})
+    return
   }
   
   let record = await Record.get(recordID)
@@ -26,4 +27,19 @@ export const approveHandler = async function(req, res) {
   console.log('审批' + extractStatus(status))
   // notify users
   res.json({error: 0, msg: '审批完成'})
+}
+
+/**
+ * handler of download attachment
+ * method: GET
+ */
+export const downloadHandler = (req, res) => {
+  let { path } = req.query
+  res.download(path, 'application.pdf', (err) => {
+    if (err) {
+      console.log(err)
+      res.json({error: 1, msg: '意外错误'})
+    }
+    console.log('##LOG##: Finish download')
+  })
 }

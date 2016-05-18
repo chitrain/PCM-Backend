@@ -11,7 +11,9 @@ var _sequelize2 = _interopRequireDefault(_sequelize);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var sequelize = exports.sequelize = new _sequelize2.default('pcm', 'root', 'mysqlpwd'); /**
-                                                                                         * @author Yujie Li
-                                                                                         * @email im_yujie@foxmail.com
-                                                                                         */
+var sequelize = exports.sequelize = new _sequelize2.default('pcm', 'root', 'mysqlpwd', {
+  timezone: '+08:00'
+}); /**
+     * @author Yujie Li
+     * @email im_yujie@foxmail.com
+     */

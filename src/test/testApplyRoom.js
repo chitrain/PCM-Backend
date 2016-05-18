@@ -28,8 +28,8 @@ export const ApplyRoomTest = () => {
   it('apply room should success', (done) => {
     server
       .post('/record')
-      .field('startTime', '2016-05-08 12:00 GMT+0800')
-      .field('endTime', '2016-05-08 15:00 GMT+0800')
+      .field('startTime', '2016-05-08 12:00')
+      .field('endTime', '2016-05-08 15:00')
       .field('roomNo', 'A101')
       .field('unit', '呵呵哒')
       .field('scale', '40')
@@ -40,13 +40,60 @@ export const ApplyRoomTest = () => {
       }, done)
   })
   
+  // 起点时间大于末尾时间
+  it('apply room should fail', (done) => {
+    server
+      .post('/record')
+      .field('startTime', '2016-05-08 13:00')
+      .field('roomNo', 'A101')
+      .field('unit', '呵呵哒')
+      .field('scale', '40')
+      .attach('file', '../testData/neipei.docx')
+      .expect(200, {
+        error: 1,
+        msg: '参数错误：出现空参数'
+      }, done)
+  })
+  
+  // 起点时间大于末尾时间
+  it('apply room should fail', (done) => {
+    server
+      .post('/record')
+      .field('startTime', '2016-05-08 19:00')
+      .field('endTime', '2016-05-08 16:00')
+      .field('roomNo', 'A101')
+      .field('unit', '呵呵哒')
+      .field('scale', '40')
+      .attach('file', '../testData/neipei.docx')
+      .expect(200, {
+        error: 1,
+        msg: '参数错误：不合法时间'
+      }, done)
+  })
+  
+  // 与已有记录冲突
+  it('apply room should fail', (done) => {
+    server
+      .post('/record')
+      .field('startTime', '2016-05-08 13:00')
+      .field('endTime', '2016-05-08 16:00')
+      .field('roomNo', 'A101')
+      .field('unit', '呵呵哒')
+      .field('scale', '40')
+      .attach('file', '../testData/neipei.docx')
+      .expect(200, {
+        error: 1,
+        msg: '出现时间冲突'
+      }, done)
+  })
+  
   it('get record should success', (done) => {
     server
       .get('/record')
       .query({roomNo: 'A101'})
       .expect(200, {
         error: 0,
-        message: '成功'
+        msg: '成功'
       }, done)
   })
 }

@@ -30,6 +30,7 @@ var storage = _multer2.default.diskStorage({
   destination: function destination(req, file, cb) {
     return cb(null, './tempStore');
   },
+
   filename: function filename(req, file, cb) {
     var ff = file.originalname.split('.');
     var current = Date.now();
@@ -43,6 +44,17 @@ var router = exports.router = (0, _express.Router)();
 router.use(function (req, res, next) {
   var url = req.originalUrl;
 
+  // admin
+  if (url.indexOf('admin') > -1) {
+    if (url.indexOf('login') > -1 || req.session.admin) {
+      next();
+      return;
+    }
+    res.json({ error: 1, msg: '没有权限' });
+    return;
+  }
+
+  // user
   if (req.session.user) {
     next();
   } else {
@@ -80,9 +92,12 @@ router.get('/record', _ApplyRoom.getRecordHandler);
 /**
  * route to approve
  */
-router.post('/record/:recordID', _ApproveRecord.approveHandler);
+router.post('/admin/record/:recordID', _ApproveRecord.approveHandler);
 
 /**
  * route to admin
  */
 router.post('/admin/login', _AdminManage.adminLoginHandler);
+router.get('/admin/logout', _AdminManage.adminLogoutHandler);
+
+router.get('/admin/download', _ApproveRecord.downloadHandler);

@@ -144,10 +144,9 @@ var _class = function () {
                 return record.save();
 
               case 23:
-                console.log('set finish..........');
                 return _context.abrupt('return', record.save());
 
-              case 25:
+              case 24:
               case 'end':
                 return _context.stop();
             }
@@ -238,6 +237,30 @@ var _class = function () {
 
       return Record.findOne(query);
     }
+  }, {
+    key: 'getAllRecords',
+    value: function () {
+      var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                return _context3.abrupt('return', Record.findAll());
+
+              case 1:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function getAllRecords() {
+        return ref.apply(this, arguments);
+      }
+
+      return getAllRecords;
+    }()
   }]);
   return _class;
 }();
