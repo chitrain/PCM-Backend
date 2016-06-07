@@ -44,6 +44,7 @@ var _config2 = _interopRequireDefault(_config);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
+ * handler of apply room
  * method: POST
  */
 /**
@@ -66,6 +67,8 @@ var applyHandler = exports.applyHandler = function () {
             unit = _req$body.unit;
             scale = _req$body.scale;
 
+            // check non empty
+
             if (!(!startTime || !endTime || !unit || !scale)) {
               _context.next = 9;
               break;
@@ -86,6 +89,8 @@ var applyHandler = exports.applyHandler = function () {
           case 12:
             startDate = (0, _moment2.default)(startTime);
             endDate = (0, _moment2.default)(endTime);
+
+            // validate date
 
             if (!(!startDate.isValid() || !endDate.isValid() || startDate.isAfter(endDate))) {
               _context.next = 17;
@@ -164,6 +169,7 @@ var applyHandler = exports.applyHandler = function () {
 }();
 
 /**
+ * handler of get record
  * method: GET
  */
 var getRecordHandler = exports.getRecordHandler = function () {
@@ -191,6 +197,8 @@ var getRecordHandler = exports.getRecordHandler = function () {
             result = _context4.sent;
 
             console.log('## LOG ##', result);
+
+            // get records according to time
 
             if (!(startTime || endTime)) {
               _context4.next = 15;
@@ -304,6 +312,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
           case 23:
 
+            // when no time or roomNo, return user's records
             if (!startTime && !endTime && !roomNo) {
               result = result.filter(function () {
                 var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(record) {

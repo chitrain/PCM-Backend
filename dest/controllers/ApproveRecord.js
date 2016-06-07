@@ -32,50 +32,77 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var approveHandler = exports.approveHandler = function () {
   var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(req, res) {
-    var _req$body, recordID, status, record;
-
+    var recordID, status, record, applier, email;
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _req$body = req.body;
-            recordID = _req$body.recordID;
-            status = _req$body.status;
+            recordID = req.params.recordID;
+            status = req.body.status;
 
 
-            status = +status;
+            status = +status; // string to number
 
             if (!(status !== 0 && status !== 1 && status !== 2)) {
-              _context.next = 7;
+              _context.next = 6;
               break;
             }
 
             res.json({ error: 1, msg: '参数错误' });
             return _context.abrupt('return');
 
-          case 7:
-            _context.next = 9;
+          case 6:
+            _context.next = 8;
             return _record2.default.get(recordID);
 
-          case 9:
+          case 8:
             record = _context.sent;
 
+            if (record) {
+              _context.next = 12;
+              break;
+            }
+
+            res.json({ error: 1, msg: '没有该条记录' });
+            return _context.abrupt('return');
+
+          case 12:
+            console.log(record);
             record.status = status;
 
-            _context.next = 13;
+            _context.prev = 14;
+            _context.next = 17;
+            return record.getApplier();
+
+          case 17:
+            applier = _context.sent;
+            email = applier.email;
+
+            console.log(email);
+            _context.next = 25;
+            break;
+
+          case 22:
+            _context.prev = 22;
+            _context.t0 = _context['catch'](14);
+
+            console.log(_context.t0);
+
+          case 25:
+            _context.next = 27;
             return record.save();
 
-          case 13:
+          case 27:
             console.log('审批' + (0, _basic.extractStatus)(status));
-            // notify users
+            // notify users `email`
             res.json({ error: 0, msg: '审批完成' });
 
-          case 15:
+          case 29:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, this);
+    }, _callee, this, [[14, 22]]);
   }));
   return function approveHandler(_x, _x2) {
     return ref.apply(this, arguments);

@@ -15,8 +15,8 @@ import { encrypt as hash } from './crypt'
  * create some mock data.
  */
 export const cleanup = function() {
-  Record.model.belongsTo(User.model, {foreignKey: 'applierId'})
-  Record.model.belongsTo(Room.model, {foreignKey: 'roomId'})
+  Record.model.belongsTo(User.model, {as: 'applier', foreignKey: 'applierId'})
+  Record.model.belongsTo(Room.model, {as: 'room', foreignKey: 'roomId'})
 
   sequelize.query('SET FOREIGN_KEY_CHECKS = 0')
   .then(() => sequelize.sync({force: true}))

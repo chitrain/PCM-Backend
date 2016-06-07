@@ -37,8 +37,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var cleanup = exports.cleanup = function cleanup() {
-  _record2.default.model.belongsTo(_user2.default.model, { foreignKey: 'applierId' });
-  _record2.default.model.belongsTo(_room2.default.model, { foreignKey: 'roomId' });
+  _record2.default.model.belongsTo(_user2.default.model, { as: 'applier', foreignKey: 'applierId' });
+  _record2.default.model.belongsTo(_room2.default.model, { as: 'room', foreignKey: 'roomId' });
 
   _sql.sequelize.query('SET FOREIGN_KEY_CHECKS = 0').then(function () {
     return _sql.sequelize.sync({ force: true });

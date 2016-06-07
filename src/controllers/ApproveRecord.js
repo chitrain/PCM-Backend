@@ -11,9 +11,10 @@ import { extractStatus } from '../utils/basic'
  * method: POST
  */
 export const approveHandler = async function(req, res) {
-  let { recordID, status } = req.body
+  let { recordID } = req.params
+  let { status } = req.body
   
-  status = +status
+  status = +status // string to number
   
   if (status !== 0 && status !== 1 && status !== 2) {
     res.json({error: 1, msg: '参数错误'})
@@ -21,11 +22,24 @@ export const approveHandler = async function(req, res) {
   }
   
   let record = await Record.get(recordID)
+  if (!record) {
+    res.json({error: 1, msg: '没有该条记录'})
+    return
+  }
+  console.log(record)
   record.status = status
   
+  try {
+    let applier = await record.getApplier()
+    let email = applier.email
+    console.log(email)
+  } catch(e) {
+    console.log(e)
+  }
+  
   await record.save()
-  console.log('审批' + extractStatus(status))
-  // notify users
+  console.log(`审批${extractStatus(status)}`)
+  // notify users `email`
   res.json({error: 0, msg: '审批完成'})
 }
 

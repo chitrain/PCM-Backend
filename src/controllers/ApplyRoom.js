@@ -13,16 +13,19 @@ import CONFIG from '../config'
 
 
 /**
+ * handler of apply room
  * method: POST
  */
 export const applyHandler = async function(req, res) {
   let { startTime, endTime, roomNo, unit, scale } = req.body
   
+  // check non empty
   if (!startTime || !endTime || !unit || !scale) {
     res.json({error: 1, msg: '参数错误：出现空参数'})
     return
   }
   
+  // check upload file
   if (!req.file) {
     res.json({error: 1, msg: '文件上传错误：未找到文件'})
     return
@@ -31,6 +34,7 @@ export const applyHandler = async function(req, res) {
   let startDate = moment(startTime)
   let endDate = moment(endTime)
   
+  // validate date
   if (!startDate.isValid() || !endDate.isValid() || startDate.isAfter(endDate)) {
     res.json({error: 1, msg: '参数错误：不合法时间'})
     return
@@ -71,6 +75,7 @@ export const applyHandler = async function(req, res) {
 }
 
 /**
+ * handler of get record
  * method: GET
  */
 export const getRecordHandler = async function(req, res) {
@@ -83,6 +88,7 @@ export const getRecordHandler = async function(req, res) {
   let result = await Record.getAllRecords()
   console.log('## LOG ##', result)
   
+  // get records according to time
   if (startTime || endTime) {
     let currentDate = moment()
     let startDate = currentDate
@@ -139,6 +145,7 @@ export const getRecordHandler = async function(req, res) {
     })
   }
   
+  // when no time or roomNo, return user's records
   if (!startTime && !endTime && !roomNo) {
     result = result.filter(async function(record) {
       let applier = await record.getApplier()
