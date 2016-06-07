@@ -9,3 +9,5 @@ Test-Driven Development by mocha and supertest.
 Database is driven by MySQL and orm by Sequelize.
 
 Use gulp to automaitcally build and run the project.
+
+The API docs see [docs](https://github.com/yickli/PCM-Backend/wiki)

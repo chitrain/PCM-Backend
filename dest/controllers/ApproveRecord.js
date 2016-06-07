@@ -79,7 +79,7 @@ var approveHandler = exports.approveHandler = function () {
             email = applier.email;
 
             console.log(email);
-            _context.next = 25;
+            _context.next = 26;
             break;
 
           case 22:
@@ -87,17 +87,18 @@ var approveHandler = exports.approveHandler = function () {
             _context.t0 = _context['catch'](14);
 
             console.log(_context.t0);
+            return _context.abrupt('return');
 
-          case 25:
-            _context.next = 27;
+          case 26:
+            _context.next = 28;
             return record.save();
 
-          case 27:
+          case 28:
             console.log('审批' + (0, _basic.extractStatus)(status));
             // notify users `email`
             res.json({ error: 0, msg: '审批完成' });
 
-          case 29:
+          case 30:
           case 'end':
             return _context.stop();
         }
@@ -120,7 +121,9 @@ var downloadHandler = exports.downloadHandler = function downloadHandler(req, re
     if (err) {
       console.log(err);
       res.json({ error: 1, msg: '意外错误' });
+      return;
     }
+    res.json({ error: 0, msg: '下载成功' });
     console.log('##LOG##: Finish download');
   });
 };

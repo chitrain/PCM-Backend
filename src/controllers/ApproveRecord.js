@@ -35,6 +35,7 @@ export const approveHandler = async function(req, res) {
     console.log(email)
   } catch(e) {
     console.log(e)
+    return
   }
   
   await record.save()
@@ -53,7 +54,9 @@ export const downloadHandler = (req, res) => {
     if (err) {
       console.log(err)
       res.json({error: 1, msg: '意外错误'})
+      return
     }
+    res.json({error: 0, msg: '下载成功'})
     console.log('##LOG##: Finish download')
   })
 }
