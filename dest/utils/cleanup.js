@@ -28,14 +28,40 @@ var _crypt = require('./crypt');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * clean up database when developing.
- * create some mock data.
+ * @param min {number}
+ * @param max {number}
  */
 /**
  * @author Yujie Li
  * @email im_yujie@foxmail.com
  */
 
+var genAmount = function genAmount(min, max) {
+  var range = max - min;
+  var rand = Math.random();
+  var num = min + Math.round(rand * range);
+  return num;
+};
+
+var genRooms = function genRooms() {
+  var res = [];
+  var buildings = ['A', 'B', 'C', 'D', 'E'];
+  var floors = [1, 2, 3, 4, 5, 6];
+  var rooms = ['01', '02', '03', '04', '05', '06', '07'];
+
+  for (var b in buildings) {
+    for (var f in floors) {
+      for (var r in rooms) {
+        res.push({ roomNo: buildings[b] + floors[f] + rooms[r], capacity: genAmount(40, 100) });
+      }
+    }
+  }return res;
+};
+
+/**
+ * clean up database when developing.
+ * create some mock data.
+ */
 var cleanup = exports.cleanup = function cleanup() {
   _record2.default.model.belongsTo(_user2.default.model, { as: 'applier', foreignKey: 'applierId' });
   _record2.default.model.belongsTo(_room2.default.model, { as: 'room', foreignKey: 'roomId' });
@@ -48,12 +74,12 @@ var cleanup = exports.cleanup = function cleanup() {
     (0, _crypt.encrypt)('123456').then(function (hashPwd) {
       return _admin2.default.model.create({ email: 'im_yujie@foxmail.com', name: 'Yujie', password: hashPwd });
     });
-    _room2.default.model.create({ roomNo: 'A101', capacity: 50 });
-    _room2.default.model.create({ roomNo: 'A102', capacity: 60 });
-    _room2.default.model.create({ roomNo: 'A103', capacity: 40 });
-    _room2.default.model.create({ roomNo: 'A104', capacity: 50 });
-    _room2.default.model.create({ roomNo: 'A105', capacity: 60 });
-    return _room2.default.model.create({ roomNo: 'A106', capacity: 90 });
+    var rooms = genRooms();
+
+    for (var room in rooms) {
+      _room2.default.model.create(rooms[room]);
+    }
+    return _room2.default.model.create({ roomNo: 'E108', capacity: 90 });
   }).then(function () {
     console.log('finish init database...');
   });

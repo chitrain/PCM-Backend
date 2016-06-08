@@ -11,6 +11,31 @@ import User from '../models/user'
 import { encrypt as hash } from './crypt'
 
 /**
+ * @param min {number}
+ * @param max {number}
+ */
+const genAmount = (min, max) => {
+  let range = max - min
+  let rand = Math.random()
+  let num = min + Math.round(rand * range)
+  return num
+}
+
+const genRooms = () => {
+  let res = []
+  let buildings = ['A', 'B', 'C', 'D', 'E']
+  let floors = [1, 2, 3, 4, 5, 6]
+  let rooms = ['01', '02', '03', '04', '05', '06', '07']
+  
+  for (let b in buildings)
+    for (let f in floors)
+      for (let r in rooms)
+        res.push({roomNo: buildings[b] + floors[f] + rooms[r], capacity: genAmount(40,100)})
+  
+  return res
+}
+
+/**
  * clean up database when developing.
  * create some mock data.
  */
@@ -25,12 +50,12 @@ export const cleanup = function() {
     hash('123456').then((hashPwd) => {
       return Admin.model.create({email: 'im_yujie@foxmail.com', name: 'Yujie', password: hashPwd})
     })
-    Room.model.create({roomNo: 'A101', capacity: 50})
-    Room.model.create({roomNo: 'A102', capacity: 60})
-    Room.model.create({roomNo: 'A103', capacity: 40})
-    Room.model.create({roomNo: 'A104', capacity: 50})
-    Room.model.create({roomNo: 'A105', capacity: 60})
-    return Room.model.create({roomNo: 'A106', capacity: 90})
+    let rooms = genRooms()
+
+    for (let room in rooms) {
+      Room.model.create(rooms[room])
+    }
+    return Room.model.create({roomNo: 'E108', capacity: 90})
   })
   .then(() => {
     console.log('finish init database...')

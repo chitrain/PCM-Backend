@@ -180,7 +180,7 @@ var applyHandler = exports.applyHandler = function () {
  */
 var getRecordHandler = exports.getRecordHandler = function () {
   var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(req, res) {
-    var _req$query, date, roomNo, startTime, endTime, email, result, _ret, room, reco, _reco, applier, _room;
+    var _req$query, date, roomNo, startTime, endTime, email, result, _ret, room, reco, rec, r, applier, _room;
 
     return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
@@ -359,23 +359,24 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
           case 29:
             if ((_context4.t1 = _context4.t0()).done) {
-              _context4.next = 40;
+              _context4.next = 41;
               break;
             }
 
-            _reco = _context4.t1.value;
-            _context4.next = 33;
-            return rec.getApplier();
+            rec = _context4.t1.value;
+            r = result[rec];
+            _context4.next = 34;
+            return r.getApplier();
 
-          case 33:
+          case 34:
             applier = _context4.sent;
-            _context4.next = 36;
-            return rec.getRoom();
+            _context4.next = 37;
+            return r.getRoom();
 
-          case 36:
+          case 37:
             _room = _context4.sent;
 
-            _reco.push({
+            reco.push({
               date: rec.date,
               id: rec.id,
               unit: rec.unit,
@@ -383,33 +384,34 @@ var getRecordHandler = exports.getRecordHandler = function () {
               endTime: rec.endTime,
               scale: rec.scale,
               applier: applier,
+              status: rec.status,
               room: _room,
               attachment: rec.attachment
             });
             _context4.next = 29;
             break;
 
-          case 40:
-            _context4.next = 46;
+          case 41:
+            _context4.next = 47;
             break;
 
-          case 42:
-            _context4.prev = 42;
+          case 43:
+            _context4.prev = 43;
             _context4.t2 = _context4['catch'](27);
 
             console.log(_context4.t2);
             return _context4.abrupt('return');
 
-          case 46:
+          case 47:
 
             res.json({ error: 0, msg: reco });
 
-          case 47:
+          case 48:
           case 'end':
             return _context4.stop();
         }
       }
-    }, _callee4, this, [[27, 42]]);
+    }, _callee4, this, [[27, 43]]);
   }));
   return function getRecordHandler(_x3, _x4) {
     return ref.apply(this, arguments);

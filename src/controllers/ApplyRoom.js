@@ -165,9 +165,10 @@ export const getRecordHandler = async function(req, res) {
   
   let reco = []
   try {
-    for (let reco in result) {
-      let applier = await rec.getApplier()
-      let room = await rec.getRoom()
+    for (let rec in result) {
+      let r = result[rec]
+      let applier = await r.getApplier()
+      let room = await r.getRoom()
       reco.push({
         date: rec.date,
         id: rec.id,
