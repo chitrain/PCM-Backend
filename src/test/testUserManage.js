@@ -28,7 +28,10 @@ export const UserManageTest = () => {
   it('logout should success', (done) => {
     server
       .get('/logout')
-      .expect(200, {msg: '退出成功'}, done)
+      .expect(200, {
+        error: 0,
+        msg: '退出成功'
+      }, done)
   })
   
   

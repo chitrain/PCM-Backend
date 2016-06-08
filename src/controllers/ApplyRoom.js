@@ -17,10 +17,10 @@ import CONFIG from '../config'
  * method: POST
  */
 export const applyHandler = async function(req, res) {
-  let { startTime, endTime, roomNo, unit, scale } = req.body
+  let { date, startTime, endTime, roomNo, unit, scale } = req.body
   
   // check non empty
-  if (!startTime || !endTime || !unit || !scale) {
+  if (!date || !startTime || !endTime || !unit || !scale) {
     res.json({error: 1, msg: '参数错误：出现空参数'})
     return
   }
@@ -31,8 +31,8 @@ export const applyHandler = async function(req, res) {
     return
   }
   
-  let startDate = moment(startTime)
-  let endDate = moment(endTime)
+  let startDate = moment(`${date} ${startTime}`)
+  let endDate = moment(`${date} ${endTime}`)
   
   // validate date
   if (!startDate.isValid() || !endDate.isValid() || startDate.isAfter(endDate)) {
@@ -43,7 +43,7 @@ export const applyHandler = async function(req, res) {
   let applier = req.session.user.email
   let attachment = req.file.path
   
-  console.log(`startTime: ${startTime} | endTime: ${endTime} | roomNo: ${roomNo} | unit: ${unit} | scale: ${scale}`)
+  console.log(`date: ${date} startTime: ${startTime} | endTime: ${endTime} | roomNo: ${roomNo} | unit: ${unit} | scale: ${scale}`)
   
   let room = await Room.get(roomNo)
   // check room exists or not
@@ -60,9 +60,15 @@ export const applyHandler = async function(req, res) {
   
   // check conflicts
   let records = await Record.getByRoomNo(roomNo)
+
   records = records.filter((record) => {
-    return startDate.isBetween(record.startTime, record.endTime)
-        || endDate.isBetween(record.startTime, record.endTime)
+    
+    let rsDate = moment(record.startDate)
+    let reDate = moment(record.endDate)
+    
+    return startDate.isBetween(rsDate, reDate)
+        || endDate.isBetween(rsDate, reDate)
+        
   })
   
   if (records.length > 0) {
@@ -70,7 +76,7 @@ export const applyHandler = async function(req, res) {
     return
   }
 
-  await Record.create(roomNo, applier, startTime, endTime, unit, scale, attachment)
+  await Record.create(roomNo, applier, date, startTime, endTime, unit, scale, attachment)
   res.json({error: 0, msg: '申请成功'})
 }
 
@@ -79,58 +85,62 @@ export const applyHandler = async function(req, res) {
  * method: GET
  */
 export const getRecordHandler = async function(req, res) {
-  let { roomNo, startTime, endTime } = req.query
+  let { date, roomNo, startTime, endTime } = req.query
   let email = req.session.user.email
   
   console.log('## LOG ##', `roomNo: ${roomNo}, startTime: ${startTime}, endTime: ${endTime}`)
   console.log('## LOG ##', `email: ${email}`)
   
   let result = await Record.getAllRecords()
-  console.log('## LOG ##', result)
+  // console.log('## LOG ##', result)
   
   // get records according to time
-  if (startTime || endTime) {
-    let currentDate = moment()
-    let startDate = currentDate
-    let endDate = currentDate.add(14, 'days') // after two weeks as default endDate
-    
-    if (startTime) {
-      // startTime can't before now
-      startDate = moment(startTime)
-      if (startDate.isBefore(currentDate)) {
-        res.json({error: 1, msg: '起点时间不能早于当前时间'})
-        return
+  if (date) {
+    result.filter((record) => moment(date).isSame(record.date))
+    if (startTime || endTime) {
+      let currentDate = moment()
+      let startDate = currentDate
+      let endDate = currentDate.add(14, 'days') // after two weeks as default endDate
+      
+      if (startTime) {
+        // startTime can't before now
+        startDate = moment(`${date} ${startTime}`)
+        if (startDate.isBefore(currentDate)) {
+          res.json({error: 1, msg: '起点时间不能早于当前时间'})
+          return
+        }
+        
+        if (startDate.isAfter(currentDate.add(14, 'days'))) {
+          res.json({error: 1, msg: '只能查询两周以内的课室'})
+          return
+        }
       }
       
-      if (startDate.isAfter(currentDate.add(14, 'days'))) {
-        res.json({error: 1, msg: '只能查询两周以内的课室'})
-        return
-      }
-    }
-    
-    if (endTime) {
-      // startTime can't before now
-      endDate = moment(startTime)
-      if (endDate.isBefore(currentDate)) {
-        res.json({error: 1, msg: '末尾时间不能早于当前时间'})
-        return
+      if (endTime) {
+        // startTime can't before now
+        endDate = moment(`${date} ${endTime}`)
+        if (endDate.isBefore(currentDate)) {
+          res.json({error: 1, msg: '末尾时间不能早于当前时间'})
+          return
+        }
+        
+        if (endDate.isAfter(currentDate.add(14, 'days'))) {
+          res.json({error: 1, msg: '只能查询两周以内的课室'})
+          return
+        }
       }
       
-      if (endDate.isAfter(currentDate.add(14, 'days'))) {
-        res.json({error: 1, msg: '只能查询两周以内的课室'})
-        return
+      if (startDate.isBefore(endDate)) {
+        result = result.filter((record) => {
+          let sDate = moment(record.startDate)
+          let eDate = moment(record.endDate)
+          return sDate.isBetween(startDate, endDate)
+              || eDate.isBetween(startDate, endDate)
+        })
       }
-    }
-    
-    if (startDate.isBefore(endDate)) {
-      result = result.filter((record) => {
-        let sDate = moment(record.startTime)
-        let eDate = moment(record.endTime)
-        return sDate.isBetween(startDate, endDate)
-            || eDate.isBetween(startDate, endDate)
-      })
     }
   }
+  
   
   if (roomNo) {
     let room = await Room.get(roomNo)
@@ -146,7 +156,7 @@ export const getRecordHandler = async function(req, res) {
   }
   
   // when no time or roomNo, return user's records
-  if (!startTime && !endTime && !roomNo) {
+  if (!date && !startTime && !endTime && !roomNo) {
     result = result.filter(async function(record) {
       let applier = await record.getApplier()
       return applier.email == email

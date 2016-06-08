@@ -35,7 +35,10 @@ var UserManageTest = exports.UserManageTest = function UserManageTest() {
   });
 
   it('logout should success', function (done) {
-    server.get('/logout').expect(200, { msg: '退出成功' }, done);
+    server.get('/logout').expect(200, {
+      error: 0,
+      msg: '退出成功'
+    }, done);
   });
 
   it('change passoword should fail', function (done) {

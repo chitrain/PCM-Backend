@@ -54,13 +54,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var applyHandler = exports.applyHandler = function () {
   var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(req, res) {
-    var _req$body, startTime, endTime, roomNo, unit, scale, startDate, endDate, applier, attachment, room, records;
+    var _req$body, date, startTime, endTime, roomNo, unit, scale, startDate, endDate, applier, attachment, room, records;
 
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _req$body = req.body;
+            date = _req$body.date;
             startTime = _req$body.startTime;
             endTime = _req$body.endTime;
             roomNo = _req$body.roomNo;
@@ -69,94 +70,99 @@ var applyHandler = exports.applyHandler = function () {
 
             // check non empty
 
-            if (!(!startTime || !endTime || !unit || !scale)) {
-              _context.next = 9;
+            if (!(!date || !startTime || !endTime || !unit || !scale)) {
+              _context.next = 10;
               break;
             }
 
             res.json({ error: 1, msg: '参数错误：出现空参数' });
             return _context.abrupt('return');
 
-          case 9:
+          case 10:
             if (req.file) {
-              _context.next = 12;
+              _context.next = 13;
               break;
             }
 
             res.json({ error: 1, msg: '文件上传错误：未找到文件' });
             return _context.abrupt('return');
 
-          case 12:
-            startDate = (0, _moment2.default)(startTime);
-            endDate = (0, _moment2.default)(endTime);
+          case 13:
+            startDate = (0, _moment2.default)(date + ' ' + startTime);
+            endDate = (0, _moment2.default)(date + ' ' + endTime);
 
             // validate date
 
             if (!(!startDate.isValid() || !endDate.isValid() || startDate.isAfter(endDate))) {
-              _context.next = 17;
+              _context.next = 18;
               break;
             }
 
             res.json({ error: 1, msg: '参数错误：不合法时间' });
             return _context.abrupt('return');
 
-          case 17:
+          case 18:
             applier = req.session.user.email;
             attachment = req.file.path;
 
 
-            console.log('startTime: ' + startTime + ' | endTime: ' + endTime + ' | roomNo: ' + roomNo + ' | unit: ' + unit + ' | scale: ' + scale);
+            console.log('date: ' + date + ' startTime: ' + startTime + ' | endTime: ' + endTime + ' | roomNo: ' + roomNo + ' | unit: ' + unit + ' | scale: ' + scale);
 
-            _context.next = 22;
+            _context.next = 23;
             return _room2.default.get(roomNo);
 
-          case 22:
+          case 23:
             room = _context.sent;
 
             if (room) {
-              _context.next = 26;
+              _context.next = 27;
               break;
             }
 
             res.json({ error: 1, msg: '没有该房间' });
             return _context.abrupt('return');
 
-          case 26:
+          case 27:
             if (!(room.capacity < +scale)) {
-              _context.next = 29;
+              _context.next = 30;
               break;
             }
 
             res.json({ error: 1, msg: '课室容量不满足' });
             return _context.abrupt('return');
 
-          case 29:
-            _context.next = 31;
+          case 30:
+            _context.next = 32;
             return _record2.default.getByRoomNo(roomNo);
 
-          case 31:
+          case 32:
             records = _context.sent;
 
+
             records = records.filter(function (record) {
-              return startDate.isBetween(record.startTime, record.endTime) || endDate.isBetween(record.startTime, record.endTime);
+
+              var rsDate = (0, _moment2.default)(record.startDate);
+              var reDate = (0, _moment2.default)(record.endDate);
+
+              return startDate.isBetween(rsDate, reDate) || endDate.isBetween(rsDate, reDate);
             });
 
             if (!(records.length > 0)) {
-              _context.next = 36;
+              _context.next = 37;
               break;
             }
 
             res.json({ error: 1, msg: '出现时间冲突', addition: records });
             return _context.abrupt('return');
 
-          case 36:
-            _context.next = 38;
-            return _record2.default.create(roomNo, applier, startTime, endTime, unit, scale, attachment);
-
-          case 38:
-            res.json({ error: 0, msg: '申请成功' });
+          case 37:
+            _context.next = 39;
+            return _record2.default.create(roomNo, applier, date, startTime, endTime, unit, scale, attachment);
 
           case 39:
+            res.json({ error: 0, msg: '申请成功' });
+
+          case 40:
           case 'end':
             return _context.stop();
         }
@@ -174,13 +180,14 @@ var applyHandler = exports.applyHandler = function () {
  */
 var getRecordHandler = exports.getRecordHandler = function () {
   var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(req, res) {
-    var _req$query, roomNo, startTime, endTime, email, result, _ret, room;
+    var _req$query, date, roomNo, startTime, endTime, email, result, _ret, room;
 
     return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
             _req$query = req.query;
+            date = _req$query.date;
             roomNo = _req$query.roomNo;
             startTime = _req$query.startTime;
             endTime = _req$query.endTime;
@@ -190,18 +197,23 @@ var getRecordHandler = exports.getRecordHandler = function () {
             console.log('## LOG ##', 'roomNo: ' + roomNo + ', startTime: ' + startTime + ', endTime: ' + endTime);
             console.log('## LOG ##', 'email: ' + email);
 
-            _context4.next = 9;
+            _context4.next = 10;
             return _record2.default.getAllRecords();
 
-          case 9:
+          case 10:
             result = _context4.sent;
 
-            console.log('## LOG ##', result);
+            if (!date) {
+              _context4.next = 17;
+              break;
+            }
 
-            // get records according to time
+            result.filter(function (record) {
+              return (0, _moment2.default)(date).isSame(record.date);
+            });
 
             if (!(startTime || endTime)) {
-              _context4.next = 15;
+              _context4.next = 17;
               break;
             }
 
@@ -212,7 +224,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
               if (startTime) {
                 // startTime can't before now
-                startDate = (0, _moment2.default)(startTime);
+                startDate = (0, _moment2.default)(date + ' ' + startTime);
                 if (startDate.isBefore(currentDate)) {
                   res.json({ error: 1, msg: '起点时间不能早于当前时间' });
                   return {
@@ -230,7 +242,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
               if (endTime) {
                 // startTime can't before now
-                endDate = (0, _moment2.default)(startTime);
+                endDate = (0, _moment2.default)(date + ' ' + endTime);
                 if (endDate.isBefore(currentDate)) {
                   res.json({ error: 1, msg: '末尾时间不能早于当前时间' });
                   return {
@@ -248,41 +260,41 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
               if (startDate.isBefore(endDate)) {
                 result = result.filter(function (record) {
-                  var sDate = (0, _moment2.default)(record.startTime);
-                  var eDate = (0, _moment2.default)(record.endTime);
+                  var sDate = (0, _moment2.default)(record.startDate);
+                  var eDate = (0, _moment2.default)(record.endDate);
                   return sDate.isBetween(startDate, endDate) || eDate.isBetween(startDate, endDate);
                 });
               }
             }();
 
             if (!((typeof _ret === 'undefined' ? 'undefined' : (0, _typeof3.default)(_ret)) === "object")) {
-              _context4.next = 15;
+              _context4.next = 17;
               break;
             }
 
             return _context4.abrupt('return', _ret.v);
 
-          case 15:
+          case 17:
             if (!roomNo) {
-              _context4.next = 23;
+              _context4.next = 25;
               break;
             }
 
-            _context4.next = 18;
+            _context4.next = 20;
             return _room2.default.get(roomNo);
 
-          case 18:
+          case 20:
             room = _context4.sent;
 
             if (room) {
-              _context4.next = 22;
+              _context4.next = 24;
               break;
             }
 
             res.json({ error: 1, msg: '没有该房间' });
             return _context4.abrupt('return');
 
-          case 22:
+          case 24:
 
             result = result.filter(function () {
               var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(record) {
@@ -310,10 +322,10 @@ var getRecordHandler = exports.getRecordHandler = function () {
               };
             }());
 
-          case 23:
+          case 25:
 
             // when no time or roomNo, return user's records
-            if (!startTime && !endTime && !roomNo) {
+            if (!date && !startTime && !endTime && !roomNo) {
               result = result.filter(function () {
                 var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(record) {
                   var applier;
@@ -343,7 +355,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
             res.json({ error: 0, msg: result });
 
-          case 25:
+          case 27:
           case 'end':
             return _context4.stop();
         }

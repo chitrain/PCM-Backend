@@ -14,11 +14,14 @@ import { sequelize } from './sql'
  * status: 0-pending | 1-passed | 2-rejected
  */
 const Record = sequelize.define('record', {
+  date: {
+    type: Sequelize.DATEONLY
+  },
   startTime: {
-    type: Sequelize.DATE
+    type: Sequelize.TIME
   },
   endTime: {
-    type: Sequelize.DATE
+    type: Sequelize.TIME
   },
   unit: {
     type: Sequelize.STRING
@@ -46,6 +49,17 @@ const Record = sequelize.define('record', {
       key: 'id'
     }
   }
+}, {
+  getterMethods: {
+    startDate: function() {
+      var dateStr = `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`
+      return dateStr + ' ' + this.startTime
+    },
+    endDate: function() {
+      var dateStr = `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`
+      return dateStr + ' ' + this.endTime
+    }
+  }
 })
 
 export default class {
@@ -53,10 +67,11 @@ export default class {
   
   constructor() {}
   
-  static async create(roomNo, applier, startTime, endTime, unit, scale, attachment) {
+  static async create(roomNo, applier, date, startTime, endTime, unit, scale, attachment) {
     let user = await User.get(applier)
     let room = await Room.get(roomNo)
     let record = await Record.create({
+      date,
       startTime,
       endTime,
       unit,
@@ -65,7 +80,7 @@ export default class {
       status: 0
     })
     try {
-      await record.setUser(user)
+      await record.setApplier(user)
     } catch (err) {
       console.error(err)
     }

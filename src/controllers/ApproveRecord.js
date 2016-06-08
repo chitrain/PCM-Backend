@@ -26,7 +26,7 @@ export const approveHandler = async function(req, res) {
     res.json({error: 1, msg: '没有该条记录'})
     return
   }
-  console.log(record)
+  // console.log(record)
   record.status = status
   
   try {

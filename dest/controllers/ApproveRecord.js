@@ -67,43 +67,43 @@ var approveHandler = exports.approveHandler = function () {
             return _context.abrupt('return');
 
           case 12:
-            console.log(record);
+            // console.log(record)
             record.status = status;
 
-            _context.prev = 14;
-            _context.next = 17;
+            _context.prev = 13;
+            _context.next = 16;
             return record.getApplier();
 
-          case 17:
+          case 16:
             applier = _context.sent;
             email = applier.email;
 
             console.log(email);
-            _context.next = 26;
+            _context.next = 25;
             break;
 
-          case 22:
-            _context.prev = 22;
-            _context.t0 = _context['catch'](14);
+          case 21:
+            _context.prev = 21;
+            _context.t0 = _context['catch'](13);
 
             console.log(_context.t0);
             return _context.abrupt('return');
 
-          case 26:
-            _context.next = 28;
+          case 25:
+            _context.next = 27;
             return record.save();
 
-          case 28:
+          case 27:
             console.log('审批' + (0, _basic.extractStatus)(status));
             // notify users `email`
             res.json({ error: 0, msg: '审批完成' });
 
-          case 30:
+          case 29:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, this, [[14, 22]]);
+    }, _callee, this, [[13, 21]]);
   }));
   return function approveHandler(_x, _x2) {
     return ref.apply(this, arguments);

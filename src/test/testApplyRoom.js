@@ -18,7 +18,6 @@ export const ApplyRoomTest = () => {
         email: 'im_yujie@foxmail.com',
         password: '654321'
       })
-      .expect('set-cookie', /connect\.sid/g)
       .expect(200, {
         error: 0,
         msg: '登录成功'
@@ -28,8 +27,9 @@ export const ApplyRoomTest = () => {
   it('apply room should success', (done) => {
     server
       .post('/record')
-      .field('startTime', '2016-05-08 12:00')
-      .field('endTime', '2016-05-08 15:00')
+      .field('date', '2016-05-08')
+      .field('startTime', '12:00')
+      .field('endTime', '15:00')
       .field('roomNo', 'A101')
       .field('unit', '呵呵哒')
       .field('scale', '40')
@@ -44,7 +44,8 @@ export const ApplyRoomTest = () => {
   it('apply room should fail', (done) => {
     server
       .post('/record')
-      .field('startTime', '2016-05-08 13:00')
+      .field('date', '2016-05-08')
+      .field('startTime', '13:00')
       .field('roomNo', 'A101')
       .field('unit', '呵呵哒')
       .field('scale', '40')
@@ -59,8 +60,9 @@ export const ApplyRoomTest = () => {
   it('apply room should fail', (done) => {
     server
       .post('/record')
-      .field('startTime', '2016-05-08 19:00')
-      .field('endTime', '2016-05-08 16:00')
+      .field('date', '2016-05-08')
+      .field('startTime', '19:00')
+      .field('endTime', '16:00')
       .field('roomNo', 'A101')
       .field('unit', '呵呵哒')
       .field('scale', '40')
@@ -75,10 +77,11 @@ export const ApplyRoomTest = () => {
   it('apply room should fail', (done) => {
     server
       .post('/record')
-      .field('startTime', '2016-05-08 13:00')
-      .field('endTime', '2016-05-08 16:00')
+      .field('date', '2016-05-08')
+      .field('startTime', '13:00')
+      .field('endTime', '16:00')
       .field('roomNo', 'A101')
-      .field('unit', '呵呵哒')
+      .field('unit', '我有冲突啊')
       .field('scale', '40')
       .attach('file', '../testData/neipei.docx')
       .expect(200, {
@@ -91,6 +94,16 @@ export const ApplyRoomTest = () => {
     server
       .get('/record')
       .query({roomNo: 'A101'})
+      .expect(200, {
+        error: 0,
+        msg: '成功'
+      }, done)
+  })
+  
+  it('get record should success', (done) => {
+    server
+      .get('/record')
+      .query({date: '2016-05-08'})
       .expect(200, {
         error: 0,
         msg: '成功'

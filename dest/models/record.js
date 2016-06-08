@@ -44,11 +44,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * status: 0-pending | 1-passed | 2-rejected
  */
 var Record = _sql.sequelize.define('record', {
+  date: {
+    type: _sequelize2.default.DATEONLY
+  },
   startTime: {
-    type: _sequelize2.default.DATE
+    type: _sequelize2.default.TIME
   },
   endTime: {
-    type: _sequelize2.default.DATE
+    type: _sequelize2.default.TIME
   },
   unit: {
     type: _sequelize2.default.STRING
@@ -76,6 +79,17 @@ var Record = _sql.sequelize.define('record', {
       key: 'id'
     }
   }
+}, {
+  getterMethods: {
+    startDate: function startDate() {
+      var dateStr = this.date.getFullYear() + '-' + (this.date.getMonth() + 1) + '-' + this.date.getDate();
+      return dateStr + ' ' + this.startTime;
+    },
+    endDate: function endDate() {
+      var dateStr = this.date.getFullYear() + '-' + (this.date.getMonth() + 1) + '-' + this.date.getDate();
+      return dateStr + ' ' + this.endTime;
+    }
+  }
 }); /**
      * @author Yujie Li
      * @email im_yujie@foxmail.com
@@ -89,7 +103,7 @@ var _class = function () {
   (0, _createClass3.default)(_class, null, [{
     key: 'create',
     value: function () {
-      var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(roomNo, applier, startTime, endTime, unit, scale, attachment) {
+      var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(roomNo, applier, date, startTime, endTime, unit, scale, attachment) {
         var user, room, record;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
@@ -107,6 +121,7 @@ var _class = function () {
                 room = _context.sent;
                 _context.next = 8;
                 return Record.create({
+                  date: date,
                   startTime: startTime,
                   endTime: endTime,
                   unit: unit,
@@ -119,7 +134,7 @@ var _class = function () {
                 record = _context.sent;
                 _context.prev = 9;
                 _context.next = 12;
-                return record.setUser(user);
+                return record.setApplier(user);
 
               case 12:
                 _context.next = 17;
@@ -154,7 +169,7 @@ var _class = function () {
         }, _callee, this, [[9, 14]]);
       }));
 
-      function create(_x, _x2, _x3, _x4, _x5, _x6, _x7) {
+      function create(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
         return ref.apply(this, arguments);
       }
 
@@ -222,7 +237,7 @@ var _class = function () {
         }, _callee2, this);
       }));
 
-      function getByRoomNo(_x8) {
+      function getByRoomNo(_x9) {
         return ref.apply(this, arguments);
       }
 

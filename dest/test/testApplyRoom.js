@@ -27,14 +27,14 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
     server.post('/login').type('form').send({
       email: 'im_yujie@foxmail.com',
       password: '654321'
-    }).expect('set-cookie', /connect\.sid/g).expect(200, {
+    }).expect(200, {
       error: 0,
       msg: '登录成功'
     }, done);
   });
 
   it('apply room should success', function (done) {
-    server.post('/record').field('startTime', '2016-05-08 12:00').field('endTime', '2016-05-08 15:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
+    server.post('/record').field('date', '2016-05-08').field('startTime', '12:00').field('endTime', '15:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
       error: 0,
       msg: '申请成功'
     }, done);
@@ -42,7 +42,7 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
 
   // 起点时间大于末尾时间
   it('apply room should fail', function (done) {
-    server.post('/record').field('startTime', '2016-05-08 13:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
+    server.post('/record').field('date', '2016-05-08').field('startTime', '13:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
       error: 1,
       msg: '参数错误：出现空参数'
     }, done);
@@ -50,7 +50,7 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
 
   // 起点时间大于末尾时间
   it('apply room should fail', function (done) {
-    server.post('/record').field('startTime', '2016-05-08 19:00').field('endTime', '2016-05-08 16:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
+    server.post('/record').field('date', '2016-05-08').field('startTime', '19:00').field('endTime', '16:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
       error: 1,
       msg: '参数错误：不合法时间'
     }, done);
@@ -58,7 +58,7 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
 
   // 与已有记录冲突
   it('apply room should fail', function (done) {
-    server.post('/record').field('startTime', '2016-05-08 13:00').field('endTime', '2016-05-08 16:00').field('roomNo', 'A101').field('unit', '呵呵哒').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
+    server.post('/record').field('date', '2016-05-08').field('startTime', '13:00').field('endTime', '16:00').field('roomNo', 'A101').field('unit', '我有冲突啊').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
       error: 1,
       msg: '出现时间冲突'
     }, done);
@@ -66,6 +66,13 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
 
   it('get record should success', function (done) {
     server.get('/record').query({ roomNo: 'A101' }).expect(200, {
+      error: 0,
+      msg: '成功'
+    }, done);
+  });
+
+  it('get record should success', function (done) {
+    server.get('/record').query({ date: '2016-05-08' }).expect(200, {
       error: 0,
       msg: '成功'
     }, done);
