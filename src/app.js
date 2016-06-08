@@ -22,6 +22,7 @@ initDB()
 
 const PORT = CONFIG.url.split(':')[2]
 
+app.use(cors({origin: 'http://localhost:8080', credentials: true}))
 
 app.use(function(req, res, next) {
   onHeaders(res, function() {
@@ -40,7 +41,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    httpOnly: false
+    httpOnly: false,
+    secure: false
   }
 }))
 

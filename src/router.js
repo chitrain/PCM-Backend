@@ -27,14 +27,14 @@ const storage = multer.diskStorage({
 export const upload = multer({storage})
 export const router = Router()
 
-router.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
-  res.header('Access-Control-Allow-Headers', '*')
-  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
-  res.header('Access-Control-Allow-Credentials', 'true')
-  res.header('Access-Control-Expose-Headers', 'Content-Type, token')
-  next()
-})
+// router.all('*', (req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
+//   res.header('Access-Control-Allow-Headers', '*')
+//   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+//   res.header('Access-Control-Allow-Credentials', 'true')
+//   res.header('Access-Control-Expose-Headers', 'Content-Type, token')
+//   next()
+// })
 router.use((req, res, next) => {
   let url = req.originalUrl
   
@@ -49,6 +49,9 @@ router.use((req, res, next) => {
   }
   
   // user
+  console.log('malegeji!!!!!!!')
+  console.log(req.session.user)
+  console.log(req)
   if (req.session.user) {
     next()
   } else {

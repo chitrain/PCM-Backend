@@ -48,6 +48,8 @@ var app = exports.app = (0, _express2.default)();
 
 var PORT = _config2.default.url.split(':')[2];
 
+app.use((0, _cors2.default)({ origin: 'http://localhost:8080', credentials: true }));
+
 app.use(function (req, res, next) {
   (0, _onHeaders2.default)(res, function () {
     var cookie = res.getHeader('set-cookie');
@@ -64,7 +66,8 @@ app.use((0, _expressSession2.default)({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    httpOnly: false
+    httpOnly: false,
+    secure: false
   }
 }));
 

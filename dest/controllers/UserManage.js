@@ -77,9 +77,10 @@ var registerHandler = exports.registerHandler = function () {
             // console.log(newUser)
             req.session.user = { email: email, name: name };
             console.log('已登录');
+            console.log(req.session);
             res.json({ error: 0, msg: '注册成功' });
 
-          case 21:
+          case 22:
           case 'end':
             return _context.stop();
         }
@@ -145,9 +146,10 @@ var loginHandler = exports.loginHandler = function () {
             req.session.user = { email: email, name: user.name };
             // res.cookie('email', email, {signed: true})
             console.log('已登录');
+            console.log(req.session);
             res.json({ error: 0, msg: '登录成功' });
 
-          case 20:
+          case 21:
           case 'end':
             return _context2.stop();
         }

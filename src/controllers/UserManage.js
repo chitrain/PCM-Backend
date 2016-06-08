@@ -27,6 +27,7 @@ export const registerHandler = async function(req, res) {
   // console.log(newUser)
   req.session.user = {email, name}
   console.log('已登录')
+  console.log(req.session)
   res.json({error: 0, msg: '注册成功'})
 }
 
@@ -56,6 +57,7 @@ export const loginHandler = async function(req, res) {
   req.session.user = {email, name: user.name}
   // res.cookie('email', email, {signed: true})
   console.log('已登录')
+  console.log(req.session)
   res.json({error: 0, msg: '登录成功'})
 }
 
