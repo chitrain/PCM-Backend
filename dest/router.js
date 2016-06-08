@@ -41,6 +41,14 @@ var storage = _multer2.default.diskStorage({
 var upload = exports.upload = (0, _multer2.default)({ storage: storage });
 var router = exports.router = (0, _express.Router)();
 
+router.all('*', function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Expose-Headers', 'Content-Type, token');
+  next();
+});
 router.use(function (req, res, next) {
   var url = req.originalUrl;
 

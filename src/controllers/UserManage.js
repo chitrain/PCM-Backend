@@ -26,6 +26,7 @@ export const registerHandler = async function(req, res) {
   let newUser = await User.create(email, name, hashPwd)
   // console.log(newUser)
   req.session.user = {email, name}
+  console.log('已登录')
   res.json({error: 0, msg: '注册成功'})
 }
 
@@ -54,6 +55,7 @@ export const loginHandler = async function(req, res) {
   
   req.session.user = {email, name: user.name}
   // res.cookie('email', email, {signed: true})
+  console.log('已登录')
   res.json({error: 0, msg: '登录成功'})
 }
 
@@ -62,8 +64,9 @@ export const loginHandler = async function(req, res) {
  * method: GET
  */
 export const logoutHandler = (req, res) => {
+  console.log('登出')
   req.session.user = null
-  res.json({msg: '退出成功'})
+  res.json({error: 0, msg: '退出成功'})
 }
 
 /**

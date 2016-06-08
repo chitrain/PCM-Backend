@@ -6,10 +6,13 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
+import cors from 'cors'
+import onHeaders from 'on-headers'
 
 import { router } from './router'
 import { cleanup as initDB } from './utils/cleanup'
 import CONFIG from './config'
+
 
 export const app = express()
 
@@ -19,12 +22,26 @@ initDB()
 
 const PORT = CONFIG.url.split(':')[2]
 
+
+app.use(function(req, res, next) {
+  onHeaders(res, function() {
+    let cookie = res.getHeader('set-cookie')
+    if (cookie)
+    res.setHeader('token', cookie)
+  })
+  next()
+})
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
+  name: 'sid',
   secret: '**im a secret**',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: false
+  }
 }))
 
 // load router

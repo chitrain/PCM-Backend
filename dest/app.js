@@ -17,6 +17,14 @@ var _expressSession = require('express-session');
 
 var _expressSession2 = _interopRequireDefault(_expressSession);
 
+var _cors = require('cors');
+
+var _cors2 = _interopRequireDefault(_cors);
+
+var _onHeaders = require('on-headers');
+
+var _onHeaders2 = _interopRequireDefault(_onHeaders);
+
 var _router = require('./router');
 
 var _cleanup = require('./utils/cleanup');
@@ -40,12 +48,24 @@ var app = exports.app = (0, _express2.default)();
 
 var PORT = _config2.default.url.split(':')[2];
 
+app.use(function (req, res, next) {
+  (0, _onHeaders2.default)(res, function () {
+    var cookie = res.getHeader('set-cookie');
+    if (cookie) res.setHeader('token', cookie);
+  });
+  next();
+});
+
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
 app.use((0, _expressSession2.default)({
+  name: 'sid',
   secret: '**im a secret**',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: false
+  }
 }));
 
 // load router
