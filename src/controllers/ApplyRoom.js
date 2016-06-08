@@ -176,6 +176,7 @@ export const getRecordHandler = async function(req, res) {
         endTime: rec.endTime,
         scale: rec.scale,
         applier: applier,
+        status: rec.status,
         room: room,
         attachment: rec.attachment
       })
