@@ -163,5 +163,27 @@ export const getRecordHandler = async function(req, res) {
     })
   }
   
-  res.json({error: 0, msg: result})
+  let reco = []
+  try {
+    for (let reco in result) {
+      let applier = await rec.getApplier()
+      let room = await rec.getRoom()
+      reco.push({
+        date: rec.date,
+        id: rec.id,
+        unit: rec.unit,
+        startTime: rec.startTime,
+        endTime: rec.endTime,
+        scale: rec.scale,
+        applier: applier,
+        room: room,
+        attachment: rec.attachment
+      })
+    }
+  } catch(e) {
+    console.log(e)
+    return
+  }
+  
+  res.json({error: 0, msg: reco})
 }

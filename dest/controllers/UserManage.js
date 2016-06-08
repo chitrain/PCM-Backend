@@ -52,26 +52,24 @@ var registerHandler = exports.registerHandler = function () {
           case 7:
             user = _context.sent;
 
-            console.log(user);
-
             if (!user) {
-              _context.next = 12;
+              _context.next = 11;
               break;
             }
 
             res.json({ error: 1, msg: '邮箱已被注册' });
             return _context.abrupt('return');
 
-          case 12:
-            _context.next = 14;
+          case 11:
+            _context.next = 13;
             return (0, _crypt.encrypt)(password);
 
-          case 14:
+          case 13:
             hashPwd = _context.sent;
-            _context.next = 17;
+            _context.next = 16;
             return _user2.default.create(email, name, hashPwd);
 
-          case 17:
+          case 16:
             newUser = _context.sent;
 
             // console.log(newUser)
@@ -80,7 +78,7 @@ var registerHandler = exports.registerHandler = function () {
             console.log(req.session);
             res.json({ error: 0, msg: '注册成功' });
 
-          case 22:
+          case 21:
           case 'end':
             return _context.stop();
         }
@@ -146,10 +144,10 @@ var loginHandler = exports.loginHandler = function () {
             req.session.user = { email: email, name: user.name };
             // res.cookie('email', email, {signed: true})
             console.log('已登录');
-            console.log(req.session);
+            // console.log(req.session)
             res.json({ error: 0, msg: '登录成功' });
 
-          case 21:
+          case 20:
           case 'end':
             return _context2.stop();
         }

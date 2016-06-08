@@ -33,9 +33,9 @@ var _record = require('../models/record');
 
 var _record2 = _interopRequireDefault(_record);
 
-var _room = require('../models/room');
+var _room2 = require('../models/room');
 
-var _room2 = _interopRequireDefault(_room);
+var _room3 = _interopRequireDefault(_room2);
 
 var _config = require('../config');
 
@@ -109,7 +109,7 @@ var applyHandler = exports.applyHandler = function () {
             console.log('date: ' + date + ' startTime: ' + startTime + ' | endTime: ' + endTime + ' | roomNo: ' + roomNo + ' | unit: ' + unit + ' | scale: ' + scale);
 
             _context.next = 23;
-            return _room2.default.get(roomNo);
+            return _room3.default.get(roomNo);
 
           case 23:
             room = _context.sent;
@@ -180,7 +180,7 @@ var applyHandler = exports.applyHandler = function () {
  */
 var getRecordHandler = exports.getRecordHandler = function () {
   var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(req, res) {
-    var _req$query, date, roomNo, startTime, endTime, email, result, _ret, room;
+    var _req$query, date, roomNo, startTime, endTime, email, result, _ret, room, reco, _reco, applier, _room;
 
     return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
@@ -281,7 +281,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
             }
 
             _context4.next = 20;
-            return _room2.default.get(roomNo);
+            return _room3.default.get(roomNo);
 
           case 20:
             room = _context4.sent;
@@ -353,14 +353,63 @@ var getRecordHandler = exports.getRecordHandler = function () {
               }());
             }
 
-            res.json({ error: 0, msg: result });
+            reco = [];
+            _context4.prev = 27;
+            _context4.t0 = _regenerator2.default.keys(result);
 
-          case 27:
+          case 29:
+            if ((_context4.t1 = _context4.t0()).done) {
+              _context4.next = 40;
+              break;
+            }
+
+            _reco = _context4.t1.value;
+            _context4.next = 33;
+            return rec.getApplier();
+
+          case 33:
+            applier = _context4.sent;
+            _context4.next = 36;
+            return rec.getRoom();
+
+          case 36:
+            _room = _context4.sent;
+
+            _reco.push({
+              date: rec.date,
+              id: rec.id,
+              unit: rec.unit,
+              startTime: rec.startTime,
+              endTime: rec.endTime,
+              scale: rec.scale,
+              applier: applier,
+              room: _room,
+              attachment: rec.attachment
+            });
+            _context4.next = 29;
+            break;
+
+          case 40:
+            _context4.next = 46;
+            break;
+
+          case 42:
+            _context4.prev = 42;
+            _context4.t2 = _context4['catch'](27);
+
+            console.log(_context4.t2);
+            return _context4.abrupt('return');
+
+          case 46:
+
+            res.json({ error: 0, msg: reco });
+
+          case 47:
           case 'end':
             return _context4.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee4, this, [[27, 42]]);
   }));
   return function getRecordHandler(_x3, _x4) {
     return ref.apply(this, arguments);

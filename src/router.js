@@ -50,8 +50,8 @@ router.use((req, res, next) => {
   
   // user
   console.log('malegeji!!!!!!!')
-  console.log(req.session.user)
-  console.log(req)
+  // console.log(req.session.user)
+  // console.log(req)
   if (req.session.user) {
     next()
   } else {
