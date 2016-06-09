@@ -53,11 +53,11 @@ const Record = sequelize.define('record', {
   getterMethods: {
     startDate: function() {
       var dateStr = `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`
-      return dateStr + ' ' + this.startTime
+      return dateStr + ' ' + this.startTime + ' +0800'
     },
     endDate: function() {
       var dateStr = `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`
-      return dateStr + ' ' + this.endTime
+      return dateStr + ' ' + this.endTime + ' +0800'
     }
   }
 })

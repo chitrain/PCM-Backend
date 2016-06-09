@@ -87,6 +87,13 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
   });
 
   it('get record should success', function (done) {
+    server.get('/record').query({ roomNo: 'A101', date: '2016-05-08' }).expect(200, {
+      error: 0,
+      msg: '成功'
+    }, done);
+  });
+
+  it('get record should success', function (done) {
     server.get('/record').query({ date: '2016-05-08' }).expect(200, {
       error: 0,
       msg: '成功'

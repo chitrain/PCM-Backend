@@ -83,11 +83,11 @@ var Record = _sql.sequelize.define('record', {
   getterMethods: {
     startDate: function startDate() {
       var dateStr = this.date.getFullYear() + '-' + (this.date.getMonth() + 1) + '-' + this.date.getDate();
-      return dateStr + ' ' + this.startTime;
+      return dateStr + ' ' + this.startTime + ' +0800';
     },
     endDate: function endDate() {
       var dateStr = this.date.getFullYear() + '-' + (this.date.getMonth() + 1) + '-' + this.date.getDate();
-      return dateStr + ' ' + this.endTime;
+      return dateStr + ' ' + this.endTime + ' +0800';
     }
   }
 }); /**

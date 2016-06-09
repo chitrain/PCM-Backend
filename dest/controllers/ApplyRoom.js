@@ -143,8 +143,8 @@ var applyHandler = exports.applyHandler = function () {
 
             records = records.filter(function (record) {
 
-              var rsDate = (0, _moment2.default)(record.startDate);
-              var reDate = (0, _moment2.default)(record.endDate);
+              var rsDate = (0, _moment2.default)(record.startDate, 'YYYY-MM-DD HH:mm Z');
+              var reDate = (0, _moment2.default)(record.endDate, 'YYYY-MM-DD HH:mm Z');
               console.log(startDate.format(), rsDate.format(), reDate.format());
               console.log(startDate.isBetween(rsDate, reDate));
               return startDate.isBetween(rsDate, reDate) || endDate.isBetween(rsDate, reDate);
@@ -197,7 +197,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
             email = req.session.user.email;
 
 
-            console.log('## LOG ##', 'roomNo: ' + roomNo + ', startTime: ' + startTime + ', endTime: ' + endTime);
+            console.log('## LOG ##', 'date: ' + date + ', roomNo: ' + roomNo + ', startTime: ' + startTime + ', endTime: ' + endTime);
             console.log('## LOG ##', 'email: ' + email);
 
             _context4.next = 10;
@@ -211,7 +211,8 @@ var getRecordHandler = exports.getRecordHandler = function () {
               break;
             }
 
-            result.filter(function (record) {
+            result = result.filter(function (record) {
+              console.log(date, record.date);
               return (0, _moment2.default)(date).isSame(record.date);
             });
 
@@ -227,7 +228,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
               if (startTime) {
                 // startTime can't before now
-                startDate = (0, _moment2.default)(date + ' ' + startTime);
+                startDate = (0, _moment2.default)(date + ' ' + startTime + ' +0800', 'YYYY-MM-DD HH:mm Z');
                 if (startDate.isBefore(currentDate)) {
                   res.json({ error: 1, msg: '起点时间不能早于当前时间' });
                   return {
@@ -301,7 +302,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
             result = result.filter(function () {
               var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(record) {
-                var room;
+                var room, rRoomNo;
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -311,9 +312,12 @@ var getRecordHandler = exports.getRecordHandler = function () {
 
                       case 2:
                         room = _context2.sent;
-                        return _context2.abrupt('return', record.getRoom().roomNo == roomNo);
+                        rRoomNo = room.roomNo;
 
-                      case 4:
+                        console.log(rRoomNo, roomNo);
+                        return _context2.abrupt('return', rRoomNo == roomNo);
+
+                      case 6:
                       case 'end':
                         return _context2.stop();
                     }
@@ -380,7 +384,7 @@ var getRecordHandler = exports.getRecordHandler = function () {
             _room = _context4.sent;
 
             reco.push({
-              date: r.date,
+              date: (0, _moment2.default)(r.date).zone("+08:00").format('YYYY-MM-DD'),
               id: r.id,
               unit: r.unit,
               startTime: r.startTime,

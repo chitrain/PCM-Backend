@@ -64,8 +64,8 @@ export const applyHandler = async function(req, res) {
   
   records = records.filter((record) => {
     
-    let rsDate = moment(record.startDate)
-    let reDate = moment(record.endDate)
+    let rsDate = moment(record.startDate, 'YYYY-MM-DD HH:mm Z')
+    let reDate = moment(record.endDate, 'YYYY-MM-DD HH:mm Z')
     console.log(startDate.format(), rsDate.format(), reDate.format())
     console.log(startDate.isBetween(rsDate, reDate))
     return startDate.isBetween(rsDate, reDate)
@@ -90,7 +90,7 @@ export const getRecordHandler = async function(req, res) {
   let { date, roomNo, startTime, endTime } = req.query
   let email = req.session.user.email
   
-  console.log('## LOG ##', `roomNo: ${roomNo}, startTime: ${startTime}, endTime: ${endTime}`)
+  console.log('## LOG ##', `date: ${date}, roomNo: ${roomNo}, startTime: ${startTime}, endTime: ${endTime}`)
   console.log('## LOG ##', `email: ${email}`)
   
   let result = await Record.getAllRecords()
@@ -98,7 +98,10 @@ export const getRecordHandler = async function(req, res) {
   
   // get records according to time
   if (date) {
-    result.filter((record) => moment(date).isSame(record.date))
+    result = result.filter((record) => {
+      console.log(date, record.date)
+      return moment(date).isSame(record.date)
+    })
     if (startTime || endTime) {
       let currentDate = moment()
       let startDate = currentDate
@@ -106,7 +109,7 @@ export const getRecordHandler = async function(req, res) {
       
       if (startTime) {
         // startTime can't before now
-        startDate = moment(`${date} ${startTime}`)
+        startDate = moment(`${date} ${startTime} +0800`, 'YYYY-MM-DD HH:mm Z')
         if (startDate.isBefore(currentDate)) {
           res.json({error: 1, msg: '起点时间不能早于当前时间'})
           return
@@ -153,7 +156,9 @@ export const getRecordHandler = async function(req, res) {
     
     result = result.filter(async function(record) {
       let room = await record.getRoom()
-      return record.getRoom().roomNo == roomNo
+      let rRoomNo = room.roomNo
+      console.log(rRoomNo, roomNo)
+      return rRoomNo == roomNo
     })
   }
   
@@ -172,7 +177,7 @@ export const getRecordHandler = async function(req, res) {
       let applier = await r.getApplier()
       let room = await r.getRoom()
       reco.push({
-        date: r.date,
+        date: moment(r.date).zone("+08:00").format('YYYY-MM-DD'),
         id: r.id,
         unit: r.unit,
         startTime: r.startTime,
