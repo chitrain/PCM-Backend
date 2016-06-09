@@ -64,6 +64,21 @@ var ApplyRoomTest = exports.ApplyRoomTest = function ApplyRoomTest() {
     }, done);
   });
 
+  it('apply room should success', function (done) {
+    server.post('/record').field('date', '2016-06-09').field('startTime', '8:00').field('endTime', '10:00').field('roomNo', 'B101').field('unit', '我正常').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
+      error: 0,
+      msg: '申请成功'
+    }, done);
+  });
+
+  // 我也有冲突
+  it('apply room should fail', function (done) {
+    server.post('/record').field('date', '2016-06-09').field('startTime', '9:00').field('endTime', '10:00').field('roomNo', 'B101').field('unit', '我有冲突啊 2').field('scale', '40').attach('file', '../testData/neipei.docx').expect(200, {
+      error: 1,
+      msg: '出现时间冲突'
+    }, done);
+  });
+
   it('get record should success', function (done) {
     server.get('/record').query({ roomNo: 'A101' }).expect(200, {
       error: 0,

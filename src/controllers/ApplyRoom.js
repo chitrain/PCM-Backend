@@ -19,6 +19,7 @@ import CONFIG from '../config'
 export const applyHandler = async function(req, res) {
   let { date, startTime, endTime, roomNo, unit, scale } = req.body
   
+  console.log(`${date} | ${startTime} | ${endTime} | ${roomNo}`)
   // check non empty
   if (!date || !startTime || !endTime || !unit || !scale) {
     res.json({error: 1, msg: '参数错误：出现空参数'})
@@ -31,8 +32,8 @@ export const applyHandler = async function(req, res) {
     return
   }
   
-  let startDate = moment(`${date} ${startTime}`)
-  let endDate = moment(`${date} ${endTime}`)
+  let startDate = moment(`${date} ${startTime} +0800`, 'YYYY-MM-DD HH:mm Z')
+  let endDate = moment(`${date} ${endTime} +0800`, 'YYYY-MM-DD HH:mm Z')
   
   // validate date
   if (!startDate.isValid() || !endDate.isValid() || startDate.isAfter(endDate)) {
@@ -60,12 +61,13 @@ export const applyHandler = async function(req, res) {
   
   // check conflicts
   let records = await Record.getByRoomNo(roomNo)
-
+  
   records = records.filter((record) => {
     
     let rsDate = moment(record.startDate)
     let reDate = moment(record.endDate)
-    
+    console.log(startDate.format(), rsDate.format(), reDate.format())
+    console.log(startDate.isBetween(rsDate, reDate))
     return startDate.isBetween(rsDate, reDate)
         || endDate.isBetween(rsDate, reDate)
         

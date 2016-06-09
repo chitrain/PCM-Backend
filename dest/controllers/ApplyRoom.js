@@ -68,74 +68,76 @@ var applyHandler = exports.applyHandler = function () {
             unit = _req$body.unit;
             scale = _req$body.scale;
 
+
+            console.log(date + ' | ' + startTime + ' | ' + endTime + ' | ' + roomNo);
             // check non empty
 
             if (!(!date || !startTime || !endTime || !unit || !scale)) {
-              _context.next = 10;
+              _context.next = 11;
               break;
             }
 
             res.json({ error: 1, msg: '参数错误：出现空参数' });
             return _context.abrupt('return');
 
-          case 10:
+          case 11:
             if (req.file) {
-              _context.next = 13;
+              _context.next = 14;
               break;
             }
 
             res.json({ error: 1, msg: '文件上传错误：未找到文件' });
             return _context.abrupt('return');
 
-          case 13:
-            startDate = (0, _moment2.default)(date + ' ' + startTime);
-            endDate = (0, _moment2.default)(date + ' ' + endTime);
+          case 14:
+            startDate = (0, _moment2.default)(date + ' ' + startTime + ' +0800', 'YYYY-MM-DD HH:mm Z');
+            endDate = (0, _moment2.default)(date + ' ' + endTime + ' +0800', 'YYYY-MM-DD HH:mm Z');
 
             // validate date
 
             if (!(!startDate.isValid() || !endDate.isValid() || startDate.isAfter(endDate))) {
-              _context.next = 18;
+              _context.next = 19;
               break;
             }
 
             res.json({ error: 1, msg: '参数错误：不合法时间' });
             return _context.abrupt('return');
 
-          case 18:
+          case 19:
             applier = req.session.user.email;
             attachment = req.file.path;
 
 
             console.log('date: ' + date + ' startTime: ' + startTime + ' | endTime: ' + endTime + ' | roomNo: ' + roomNo + ' | unit: ' + unit + ' | scale: ' + scale);
 
-            _context.next = 23;
+            _context.next = 24;
             return _room3.default.get(roomNo);
 
-          case 23:
+          case 24:
             room = _context.sent;
 
             if (room) {
-              _context.next = 27;
+              _context.next = 28;
               break;
             }
 
             res.json({ error: 1, msg: '没有该房间' });
             return _context.abrupt('return');
 
-          case 27:
+          case 28:
             if (!(room.capacity < +scale)) {
-              _context.next = 30;
+              _context.next = 31;
               break;
             }
 
             res.json({ error: 1, msg: '课室容量不满足' });
             return _context.abrupt('return');
 
-          case 30:
-            _context.next = 32;
+          case 31:
+            _context.next = 33;
             return _record2.default.getByRoomNo(roomNo);
 
-          case 32:
+          case 33:
             records = _context.sent;
 
 
@@ -143,26 +145,27 @@ var applyHandler = exports.applyHandler = function () {
 
               var rsDate = (0, _moment2.default)(record.startDate);
               var reDate = (0, _moment2.default)(record.endDate);
-
+              console.log(startDate.format(), rsDate.format(), reDate.format());
+              console.log(startDate.isBetween(rsDate, reDate));
               return startDate.isBetween(rsDate, reDate) || endDate.isBetween(rsDate, reDate);
             });
 
             if (!(records.length > 0)) {
-              _context.next = 37;
+              _context.next = 38;
               break;
             }
 
             res.json({ error: 1, msg: '出现时间冲突', addition: records });
             return _context.abrupt('return');
 
-          case 37:
-            _context.next = 39;
+          case 38:
+            _context.next = 40;
             return _record2.default.create(roomNo, applier, date, startTime, endTime, unit, scale, attachment);
 
-          case 39:
+          case 40:
             res.json({ error: 0, msg: '申请成功' });
 
-          case 40:
+          case 41:
           case 'end':
             return _context.stop();
         }
