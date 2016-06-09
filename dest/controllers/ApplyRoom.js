@@ -377,16 +377,16 @@ var getRecordHandler = exports.getRecordHandler = function () {
             _room = _context4.sent;
 
             reco.push({
-              date: rec.date,
-              id: rec.id,
-              unit: rec.unit,
-              startTime: rec.startTime,
-              endTime: rec.endTime,
-              scale: rec.scale,
+              date: r.date,
+              id: r.id,
+              unit: r.unit,
+              startTime: r.startTime,
+              endTime: r.endTime,
+              scale: r.scale,
               applier: applier,
-              status: rec.status,
+              status: r.status,
               room: _room,
-              attachment: rec.attachment
+              attachment: r.attachment
             });
             _context4.next = 29;
             break;

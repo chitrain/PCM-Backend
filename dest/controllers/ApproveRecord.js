@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.downloadHandler = exports.approveHandler = undefined;
+exports.downloadHandler = exports.getAllRecordHandler = exports.approveHandler = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -110,6 +110,83 @@ var approveHandler = exports.approveHandler = function () {
   };
 }();
 
+var getAllRecordHandler = exports.getAllRecordHandler = function () {
+  var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(req, res) {
+    var result, reco, rec, r, applier, room;
+    return _regenerator2.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            console.log('ADMIN GET ALL RECORDS');
+            _context2.next = 3;
+            return _record2.default.getAllRecords();
+
+          case 3:
+            result = _context2.sent;
+            reco = [];
+            _context2.prev = 5;
+            _context2.t0 = _regenerator2.default.keys(result);
+
+          case 7:
+            if ((_context2.t1 = _context2.t0()).done) {
+              _context2.next = 19;
+              break;
+            }
+
+            rec = _context2.t1.value;
+            r = result[rec];
+            _context2.next = 12;
+            return r.getApplier();
+
+          case 12:
+            applier = _context2.sent;
+            _context2.next = 15;
+            return r.getRoom();
+
+          case 15:
+            room = _context2.sent;
+
+            reco.push({
+              date: r.date,
+              id: r.id,
+              unit: r.unit,
+              startTime: r.startTime,
+              endTime: r.endTime,
+              scale: r.scale,
+              applier: applier,
+              status: r.status,
+              room: room,
+              attachment: r.attachment
+            });
+            _context2.next = 7;
+            break;
+
+          case 19:
+            _context2.next = 25;
+            break;
+
+          case 21:
+            _context2.prev = 21;
+            _context2.t2 = _context2['catch'](5);
+
+            console.log(_context2.t2);
+            return _context2.abrupt('return');
+
+          case 25:
+
+            res.json({ error: 0, msg: reco });
+
+          case 26:
+          case 'end':
+            return _context2.stop();
+        }
+      }
+    }, _callee2, this, [[5, 21]]);
+  }));
+  return function getAllRecordHandler(_x3, _x4) {
+    return ref.apply(this, arguments);
+  };
+}();
 /**
  * handler of download attachment
  * method: GET

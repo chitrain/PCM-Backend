@@ -98,3 +98,11 @@ export const changePasswordHandler = async function(req, res) {
   req.session.user = null
   res.json({error: 0, msg: '修改成功'})
 }
+
+
+export const getUserInfoHandler = async function(req, res) {
+  let email = req.session.user.email
+  
+  let user = await User.get(email)
+  res.json({error: 0, msg: user})
+}

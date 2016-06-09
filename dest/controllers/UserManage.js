@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.changePasswordHandler = exports.logoutHandler = exports.loginHandler = exports.registerHandler = undefined;
+exports.getUserInfoHandler = exports.changePasswordHandler = exports.logoutHandler = exports.loginHandler = exports.registerHandler = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -234,6 +234,34 @@ var changePasswordHandler = exports.changePasswordHandler = function () {
     }, _callee3, this);
   }));
   return function changePasswordHandler(_x5, _x6) {
+    return ref.apply(this, arguments);
+  };
+}();
+
+var getUserInfoHandler = exports.getUserInfoHandler = function () {
+  var ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(req, res) {
+    var email, user;
+    return _regenerator2.default.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            email = req.session.user.email;
+            _context4.next = 3;
+            return _user2.default.get(email);
+
+          case 3:
+            user = _context4.sent;
+
+            res.json({ error: 0, msg: user });
+
+          case 5:
+          case 'end':
+            return _context4.stop();
+        }
+      }
+    }, _callee4, this);
+  }));
+  return function getUserInfoHandler(_x7, _x8) {
     return ref.apply(this, arguments);
   };
 }();

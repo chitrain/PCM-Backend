@@ -7,9 +7,10 @@ import { Router } from 'express'
 import multer from 'multer'
 
 import { registerHandler, loginHandler,
-         logoutHandler, changePasswordHandler } from './controllers/UserManage'
+         logoutHandler, changePasswordHandler,
+         getUserInfoHandler } from './controllers/UserManage'
 import { applyHandler, getRecordHandler } from './controllers/ApplyRoom'
-import { approveHandler, downloadHandler } from './controllers/ApproveRecord'
+import { approveHandler, downloadHandler, getAllRecordHandler } from './controllers/ApproveRecord'
 import { adminLoginHandler, adminLogoutHandler } from './controllers/AdminManage'
 
 
@@ -72,7 +73,7 @@ router.post('/register', registerHandler)
 router.post('/login', loginHandler)
 router.get('/logout', logoutHandler)
 router.post('/password', changePasswordHandler)
-
+router.get('/user', getUserInfoHandler)
 /**
  * route to apply
  */
@@ -88,6 +89,7 @@ router.get('/record', getRecordHandler)
  * route to approve
  */
 router.post('/admin/record/:recordID', approveHandler)
+router.get('/admin/record', getAllRecordHandler)
 
 /**
  * route to admin

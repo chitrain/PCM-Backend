@@ -170,16 +170,16 @@ export const getRecordHandler = async function(req, res) {
       let applier = await r.getApplier()
       let room = await r.getRoom()
       reco.push({
-        date: rec.date,
-        id: rec.id,
-        unit: rec.unit,
-        startTime: rec.startTime,
-        endTime: rec.endTime,
-        scale: rec.scale,
+        date: r.date,
+        id: r.id,
+        unit: r.unit,
+        startTime: r.startTime,
+        endTime: r.endTime,
+        scale: r.scale,
         applier: applier,
-        status: rec.status,
+        status: r.status,
         room: room,
-        attachment: rec.attachment
+        attachment: r.attachment
       })
     }
   } catch(e) {

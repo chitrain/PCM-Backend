@@ -44,6 +44,37 @@ export const approveHandler = async function(req, res) {
   res.json({error: 0, msg: '审批完成'})
 }
 
+
+export const getAllRecordHandler = async function(req, res) {
+  console.log('ADMIN GET ALL RECORDS')
+  let result = await Record.getAllRecords()
+  
+  let reco = []
+  try {
+    for (let rec in result) {
+      let r = result[rec]
+      let applier = await r.getApplier()
+      let room = await r.getRoom()
+      reco.push({
+        date: r.date,
+        id: r.id,
+        unit: r.unit,
+        startTime: r.startTime,
+        endTime: r.endTime,
+        scale: r.scale,
+        applier: applier,
+        status: r.status,
+        room: room,
+        attachment: r.attachment
+      })
+    }
+  } catch(e) {
+    console.log(e)
+    return
+  }
+  
+  res.json({error: 0, msg: reco})
+}
 /**
  * handler of download attachment
  * method: GET
